@@ -1,0 +1,22 @@
+{
+    "name": "stepancher/yii2-content-module",
+    "description": "Yii 2 content module",
+    "keywords": ["yii2", "content"],
+    "type": "yii2-extension",
+    "license": "BSD-3",
+    "authors": [
+        {
+            "name": "stepancher",
+            "email": "stepancher@mail.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "vova07/yii2-imperavi-widget": "*",
+        "vova07/yii2-fileapi-widget": "dev-master",
+        "kartik-v/yii2-widget-datetimepicker": "*"
+    },
+    "autoload": {
+        "psr-4": { "stepancher\\content\\": "" }
+    }
+}
