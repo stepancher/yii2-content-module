@@ -67,6 +67,7 @@ class AdminController extends Controller
     {
         /** @var Content $model */
         $model = \Yii::$app->getModule("content")->model("Content");
+
         $dataProvider = new ActiveDataProvider(
             [
                 'query' => $model::find(),
