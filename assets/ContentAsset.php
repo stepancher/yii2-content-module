@@ -15,7 +15,7 @@ use yii\web\AssetBundle;
  */
 class ContentAsset extends AssetBundle
 {
-    public $sourcePath = '@app/../common/modules/content/assets/js';
+    public $sourcePath = '@stepancher/content/assets/js';
 
     public $js = ['jquery.synctranslit.js'];
     public $depends = [

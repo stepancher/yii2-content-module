@@ -1,18 +1,18 @@
 <?php
-namespace stepancher\content\migrations;
+
 use yii\db\Schema;
 use yii\db\Migration;
 
 class m150211_045719_create_content_table extends Migration
 {
-    public function safeUp()
+    public function up()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
-        $this->createTable('{{%content}}', [
+        $this->createTable('content', [
             "id"            => Schema::TYPE_PK,
             "header"        => Schema::TYPE_STRING      . ' not null',
             "title"         => Schema::TYPE_STRING      . ' default null',
@@ -32,10 +32,10 @@ class m150211_045719_create_content_table extends Migration
         $this->createIndex('unique_key_url','content','url', true);
     }
 
-    public function safeDown()
+    public function down()
     {
 
-        $this->dropTable('{{%content}}');
+        $this->dropTable('content');
         echo "m150211_045719_create_content_table таблица content была успешно удалена\n";
         return true;
     }
