@@ -5,7 +5,7 @@ use yii\db\Migration;
 
 class m150211_045719_create_content_table extends Migration
 {
-    public function up()
+    public function safeUp()
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
@@ -32,7 +32,7 @@ class m150211_045719_create_content_table extends Migration
         $this->createIndex('unique_key_url','content','url', true);
     }
 
-    public function down()
+    public function safeDown()
     {
 
         $this->dropTable('content');
