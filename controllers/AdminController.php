@@ -92,7 +92,15 @@ class AdminController extends Controller
                 $this->redirect(Url::to('index'));
             }
         }
-        return $this->render('update',['model'=>$model]);
+
+        $types = array();
+        if(\Yii::$app->getModule("content")->types) {
+            foreach(\Yii::$app->getModule("content")->types as $i => $type) {
+                $types[$i] = $type;
+            }
+        }
+
+        return $this->render('update',['model'=>$model, 'types'=>$types]);
     }
 
     /**
@@ -109,7 +117,15 @@ class AdminController extends Controller
                 $this->redirect(Url::to('index'));
             }
         }
-        return $this->render('update',['model'=>$model]);
+
+        $types = array();
+        if(\Yii::$app->getModule("content")->types) {
+            foreach(\Yii::$app->getModule("content")->types as $i => $type) {
+                $types[$i] = $type;
+            }
+        }
+
+        return $this->render('update',['model'=>$model, 'types'=>$types]);
     }
 
     /**

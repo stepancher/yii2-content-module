@@ -125,9 +125,13 @@ if ($model->isNewRecord) {
                  'showMeridian' => true,
              ]
          ]); ?>
+
+        <?php if(\Yii::$app->getModule("content")->types): ?>
+            <?= $form->field($model, 'type')->dropDownList($types) ?>
+        <?php endif; ?>
+
          <?= Html::activeCheckbox($model, 'visible'); ?>
          <?= Html::error($model, 'visible'); ?>
- 
  
          <div class="form-group">
              <?= Html::submitButton($model->isNewRecord ? Yii::t('content', 'Create') : Yii::t('content', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

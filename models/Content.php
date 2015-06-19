@@ -24,6 +24,7 @@ use vova07\fileapi\behaviors\UploadBehavior;
  * @property string $date_hide
  * @property string $keywords
  * @property string $sort
+ * @property string $type
  */
 class Content extends \yii\db\ActiveRecord
 {
@@ -78,7 +79,7 @@ class Content extends \yii\db\ActiveRecord
             [['short_text', 'keywords', 'text', 'url', 'description'], 'string'],
             [['visible'], 'boolean'],
             [['sort'], 'integer', 'message' => \Yii::t('content', 'Must be an integer')],
-            [['create_time', 'update_time','date_show', 'date_hide'], 'safe'],
+            [['create_time', 'update_time','date_show', 'date_hide', 'type'], 'safe'],
             [['header', 'title'], 'string', 'max' => 250, 'tooLong' => \Yii::t('content', 'maximum character', ['n' => 250])],
             ['image_file', 'safe'/*, 'skipOnEmpty' => true*/]
 
@@ -119,6 +120,7 @@ class Content extends \yii\db\ActiveRecord
             'sort' => \Yii::t('content', 'Sort'),
             'date_show' => \Yii::t('content', 'Date show'),
             'date_hide' => \Yii::t('content', 'Date hide'),
+            'type' => \Yii::t('content', 'Type'),
         ];
     }
 

@@ -54,6 +54,11 @@ class Content extends \yii\base\Module
     public $imageUrl;
 
     /**
+     * @var string $types - Типы статей
+     */
+    public $types = null;
+
+    /**
      * @var array Model classes, e.g., ["Content" => "content\models\Content"]
      * Usage:
      *   $user = Yii::$app->getModule("content")->model("Content", $config);
