@@ -59,6 +59,11 @@ class Content extends \yii\base\Module
     public $types = null;
 
     /**
+     * @var bool $useI18n - Использовать интернационализацию
+     */
+    public $useI18n = false;
+
+    /**
      * @var array Model classes, e.g., ["Content" => "content\models\Content"]
      * Usage:
      *   $user = Yii::$app->getModule("content")->model("Content", $config);
