@@ -5,7 +5,7 @@ return [
     'create'=>'создать',
     'Create'=>'Создать',
     'Update'=>'Обновить',
-    'Content'=>'все статьи',
+    'Content'=>'Все статьи',
     'Create content'=>'Создание статьи',
     'Update content'=>'Редактирование статьи',
     'Page not found'=>'Статья не найдена',
@@ -33,6 +33,8 @@ return [
     'Articles'=>'Статьи',
     'Type'=>'Тип статьи',
     'Language'=>'Язык',
+    'Archive'=>'Архив статей',
+    'Image'=>'Изображение',
     ''=>'',
 
 ];

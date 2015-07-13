@@ -160,4 +160,13 @@ class Content extends \yii\db\ActiveRecord
 
         return true;
     }
+
+    /**
+     * Возвращает url картинки
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->image_file ? '/upload/content/'.$this->image_file : null;
+    }
 }

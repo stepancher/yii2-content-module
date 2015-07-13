@@ -16,6 +16,11 @@ use Faker\Provider\cs_CZ\DateTime;
 
 class AdminController extends Controller
 {
+    const
+        ACTION_DELETE = 'delete',
+        ACTION_ARCHIVE = 'archive',
+        ACTION_UNARCHIVE = 'unarchive';
+
     /**
      * Поведение
      * @return array
@@ -67,12 +72,41 @@ class AdminController extends Controller
     {
         /** @var Content $model */
         $model = \Yii::$app->getModule("content")->model("Content");
-        $dataProvider = new ActiveDataProvider(
-            [
-                'query' => $model::find(),
-            ]
-        );
-        return $this->render('index', ['dataProvider' => $dataProvider]);
+        $type = \Yii::$app->request->get('type', null); // Тип статьи
+
+        $title = null; // Тип статьи
+        $query = $model::find()->where(['is_archive' => false]);
+        if($type) {
+            $query->andWhere(['type' => $type]); // Выборка по типу статьи
+            $title = \Yii::$app->getModule("content")->types[$type];
+        }
+
+        $dataProviders = array();
+        if(\Yii::$app->getModule("content")->useI18n) {
+            // Разбиение по языкам
+            foreach (\Yii::$app->params['languages'] as $lang => $name) {
+                $queryTMP = clone $query;
+                $dataProviders[$name] = new ActiveDataProvider(
+                    [
+                        'query' => $queryTMP->andWhere(['lang' => $lang]),
+                        'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
+                    ]
+                );
+            }
+        } else {
+            $dataProviders[' '] = new ActiveDataProvider(
+                [
+                    'query' => $query,
+                    'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
+                ]
+            );
+        }
+
+        return $this->render('index', [
+            'dataProviders' => $dataProviders,
+            'title' => $title,
+            'type' => $type
+        ]);
     }
 
     /**Создание статьи
@@ -89,14 +123,20 @@ class AdminController extends Controller
 //            var_dump($model->attributes);
 //            die();
             if($model->save()){
-                $this->redirect(Url::to('index'));
+                $this->redirect(Url::to('index?type='.\Yii::$app->request->get('type', null)));
             }
         }
 
+        // Список типов статей
         $types = array();
+        $firstType = \Yii::$app->request->get('type', null);
         if(\Yii::$app->getModule("content")->types) {
             foreach(\Yii::$app->getModule("content")->types as $i => $type) {
-                $types[$i] = $type;
+                if($firstType && $firstType == $i) {
+                    $types = [$i => $type] + $types;
+                } else {
+                    $types[$i] = $type;
+                }
             }
         }
 
@@ -114,7 +154,7 @@ class AdminController extends Controller
         if(\Yii::$app->request->isPost) {
             $model->attributes = \Yii::$app->request->post('Content');
             if($model->save()){
-                $this->redirect(Url::to('index'));
+                $this->redirect(Url::to('index?type='.\Yii::$app->request->get('type', null)));
             }
         }
 
@@ -139,6 +179,120 @@ class AdminController extends Controller
         if ($model) {
             $model->delete();
         }
-        $this->redirect('/admin/content');
+        $this->redirect('/admin/content/archives');
+    }
+
+    /**
+     * @param $id идентификатор архивируемой статьи
+     * @throws \Exception
+     */
+    public function actionArchive($id)
+    {
+        /** @var $model Content */
+        $model = \Yii::$app->getModule("content")->model("Content")->findOne($id);
+        if ($model) {
+            $model->updateAll(['is_archive' => true], ['id' => $id]);
+        }
+        $this->redirect(Url::to('index?type='.\Yii::$app->request->get('type', null)));
+    }
+
+    /**
+     * @param $id идентификатор восстанавливаемой статьи
+     * @throws \Exception
+     */
+    public function actionUnarchive($id)
+    {
+        /** @var $model Content */
+        $model = \Yii::$app->getModule("content")->model("Content")->findOne($id);
+        if ($model) {
+            $model->updateAll(['is_archive' => false], ['id' => $id]);
+        }
+        $this->redirect('/admin/content/archives');
+    }
+
+    /**
+     * Групповые действия со статьями
+     * @return \yii\web\Response
+     */
+    public function actionGroupAction()
+    {
+        $url = \Yii::$app->request->post('url', null);
+        $model = \Yii::$app->request->post('model', null);
+
+        if($model) {
+            $model = (new $model);
+
+            $ItemSelected = \Yii::$app->request->post(preg_replace('/^(.*)\\\/i', '', $model->className()), null);
+
+            if ($ItemSelected && count($ItemSelected) > 0) {
+                $actions = [
+                    self::ACTION_DELETE => '',
+                    self::ACTION_ARCHIVE => '',
+                    self::ACTION_UNARCHIVE => '',
+                ];
+                $action = key(array_intersect_key($actions, \Yii::$app->request->post()));
+
+                switch ($action) {
+                    case self::ACTION_DELETE:
+                        $model->deleteAll(['id' => $ItemSelected]);
+                        break;
+                    case self::ACTION_ARCHIVE:
+                        $model->updateAll(['is_archive' => true], ['id' => $ItemSelected]);
+                        break;
+                    case self::ACTION_UNARCHIVE:
+                        $model->updateAll(['is_archive' => false], ['id' => $ItemSelected]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $this->redirect($url);
+    }
+
+    /**
+     * Изменение видимости статьи
+     * @return string
+     */
+    public function actionVisible()
+    {
+        $id = \Yii::$app->request->post('id', null);
+        $model = \Yii::$app->getModule("content")->model("Content")->findOne($id);
+        if($model) {
+            $model->visible = \Yii::$app->request->post('visible');
+            if($model->save()) {
+                return json_encode(['type' => 'success', 'message' => 'OK']);
+            }
+        }
+        return json_encode(['type' => 'danger', 'message' => 'Error']);
+    }
+
+    public function actionSort()
+    {
+        $id = \Yii::$app->request->post('id', null);
+        $model = \Yii::$app->getModule("content")->model("Content")->findOne($id);
+        if($model) {
+            $model->sort = \Yii::$app->request->post('sort', null);
+            if($model->save()) {
+                return json_encode(['type' => 'success', 'message' => 'OK']);
+            }
+        }
+        return json_encode(['type' => 'danger', 'message' => 'Error']);
+    }
+
+    public function actionArchives()
+    {
+        /** @var Content $model */
+        $model = \Yii::$app->getModule("content")->model("Content");
+
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => $model::find()->where(['is_archive' => true]),
+//                'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
+            ]
+        );
+
+        return $this->render('archive', ['dataProvider' => $dataProvider]);
     }
 }

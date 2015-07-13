@@ -17,7 +17,10 @@ class ContentAsset extends AssetBundle
 {
     public $sourcePath = '@stepancher/content/assets/js';
 
-    public $js = ['jquery.synctranslit.js'];
+    public $js = [
+        'jquery.synctranslit.js',
+        'content.js'
+    ];
     public $depends = [
         'yii\web\YiiAsset',
     ];
