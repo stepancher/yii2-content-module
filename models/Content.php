@@ -74,17 +74,26 @@ class Content extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        return [
+        $rules = [
             [['header','url'], 'required', 'message' => \Yii::t('content', 'Cannot be blank')],
             [['url'], 'unique', 'message' => \Yii::t('content', 'Must be ubique')],
             [['short_text', 'keywords', 'text', 'url', 'description'], 'string'],
             [['visible'], 'boolean'],
             [['sort'], 'integer', 'message' => \Yii::t('content', 'Must be an integer')],
-            [['create_time', 'update_time','date_show', 'date_hide', 'type', 'lang'], 'safe'],
+            [['create_time', 'update_time','date_show', 'date_hide'], 'safe'],
             [['header', 'title'], 'string', 'max' => 250, 'tooLong' => \Yii::t('content', 'maximum character', ['n' => 250])],
             ['image_file', 'safe'/*, 'skipOnEmpty' => true*/]
 
         ];
+
+        if(\Yii::$app->getModule("content")->types) {
+            $rules += [['type'], 'safe'];
+        }
+        if(\Yii::$app->getModule("content")->useI18n) {
+            $rules += [['lang'], 'safe'];
+        }
+
+        return $rules;
     }
 
     /** Валидатор дат "текущая наименьшая"
