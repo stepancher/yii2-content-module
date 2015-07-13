@@ -179,7 +179,7 @@ class AdminController extends Controller
         if ($model) {
             $model->delete();
         }
-        $this->redirect('/admin/content/archives');
+        $this->redirect('/admin/content/archives?type='.\Yii::$app->request->get('type', null));
     }
 
     /**
@@ -207,7 +207,8 @@ class AdminController extends Controller
         if ($model) {
             $model->updateAll(['is_archive' => false], ['id' => $id]);
         }
-        $this->redirect('/admin/content/archives');
+
+        $this->redirect('/admin/content/archives?type='.\Yii::$app->request->get('type', null));
     }
 
     /**
@@ -285,14 +286,26 @@ class AdminController extends Controller
     {
         /** @var Content $model */
         $model = \Yii::$app->getModule("content")->model("Content");
+        $type = \Yii::$app->request->get('type', null); // Тип статьи
+
+        $title = null; // Тип статьи
+        $query = $model::find()->where(['is_archive' => true]);
+        if($type) {
+            $query->andWhere(['type' => $type]); // Выборка по типу статьи
+            $title = \Yii::$app->getModule("content")->types[$type];
+        }
 
         $dataProvider = new ActiveDataProvider(
             [
-                'query' => $model::find()->where(['is_archive' => true]),
+                'query' => $query,
 //                'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
             ]
         );
 
-        return $this->render('archive', ['dataProvider' => $dataProvider]);
+        return $this->render('archive', [
+            'dataProvider' => $dataProvider,
+            'title' => $title,
+            'type' => $type
+        ]);
     }
 }

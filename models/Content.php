@@ -87,10 +87,10 @@ class Content extends \yii\db\ActiveRecord
         ];
 
         if(\Yii::$app->getModule("content")->types) {
-            $rules += [['type'], 'safe'];
+            $rules[] = ['type', 'safe'];
         }
         if(\Yii::$app->getModule("content")->useI18n) {
-            $rules += [['lang'], 'safe'];
+            $rules[] = ['lang', 'safe'];
         }
 
         return $rules;
@@ -161,6 +161,8 @@ class Content extends \yii\db\ActiveRecord
         if ($this->isNewRecord) {
             $this->create_time = $time;
             $this->update_time = $time;
+            $this->date_show = $this->date_show ? $this->date_show : $time;
+            $this->sort = $this->sort ? $this->sort : 1000;
         } else {
             $this->update_time = $time;
         }

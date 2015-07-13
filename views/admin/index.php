@@ -19,7 +19,7 @@ $actionButtons = ''
     . Html::submitButton('<i class="icon fa fa-trash"></i>', ['class' => 'btn btn-sm btn-danger isDel', 'name' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'title' => 'Удалить выбранные записи', 'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?')])
 ;
 
-$archiveButton = Html::a('<i class="icon fa fa-trash"></i>Корзина', '/admin/content/archives', ['class' => 'btn btn-danger']);
+$archiveButton = Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/content/archives?type='.$type, ['class' => 'btn btn-warning']);
 
 $tabs = array();
 foreach ($dataProviders as $title => $dataProvider) {
@@ -65,10 +65,15 @@ foreach ($dataProviders as $title => $dataProvider) {
                             'class' => 'sort_input'
                         ]);
 
-                        $input = Html::input('number', 'sort', ($data->sort ? $data->sort : ''), [
-                            'class' => 'sort_change input-sm',
-                            'style' => 'cursor: pointer; width: 70px;',
-                            'data-id' => $data->id
+                        $input = \yii\widgets\MaskedInput::widget([
+                            'name' => 'sort',
+                            'mask' => '9{1,10}',
+                            'value' => ($data->sort ? $data->sort : ''),
+                            'options' => [
+                                'class' => 'sort_change input-sm',
+                                'style' => 'cursor: pointer; width: 60px;',
+                                'data-id' => $data->id
+                            ]
                         ]);
 
                         $button = Html::a('OK', '', ['class' => 'sort_button btn btn-success btn-sm']);
@@ -96,7 +101,7 @@ foreach ($dataProviders as $title => $dataProvider) {
 ?>
 <div class="content-index">
     <p>
-        <?= Html::a(Yii::t('content', 'Create content', [
+        <?= Html::a('<i class="btn-label icon fa fa-plus"></i> '.Yii::t('content', 'Add', [
           'modelClass' => 'content',
         ]), \yii\helpers\Url::toRoute(['create?type='.$type]), ['class' => 'btn btn-success']) ?>
     </p>

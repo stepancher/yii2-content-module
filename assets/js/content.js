@@ -68,4 +68,14 @@ $(document).ready(function () {
     //        $(this).next('.sort_button').css('display', 'none');
     //    }
     //});
+
+    // Событие по нажатию на Enter
+    $(document).keydown(function (e) {
+        if(e.keyCode == 13) {
+            $obj = $("input:focus");
+            $obj.next('.sort_button').click();
+
+            return false;
+        }
+    });
 });

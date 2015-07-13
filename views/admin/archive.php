@@ -10,7 +10,8 @@ use \stepancher\content\assets\ContentAsset;
  * @var stepancher\content\models\Content $content
  */
 
-$this->title = Yii::t('content', 'Archive');
+$this->title = Yii::t('content', 'Archive') . ($title ?  ' (' . $title . ')' : '');
+$this->params['breadcrumbs'][] = ['label'=>$title,'url'=>'/admin/content/index?type='.$type];
 $this->params['breadcrumbs'][] = ['label'=>$this->title,'url'=>''];
 
 $actionButtons = ''
@@ -34,6 +35,13 @@ $actionButtons = ''
                     'multiple' => true,
                     'name' => 'Content'
                 ],
+                [
+                    'header' => Yii::t('content', 'Image'),
+                    'format' => ['image',['width'=>'100']],
+                    'value' => function ($model) {
+                        return $model->getImageUrl() ? $model->getImageUrl() : '';
+                    }
+                ],
                 'header',
                 [
                     'attribute' => 'visible',
@@ -51,14 +59,14 @@ $actionButtons = ''
                     'class' => 'yii\grid\ActionColumn',
                     'template'=>'{restore}{delete}',
                     'buttons' => [
-                        'restore' => function($url, $model) {
-                            return Html::a( '<span class="icon fa fa-reply"></span> ', '/admin/content/unarchive?id='.$model->id, [
+                        'restore' => function($url, $model) use ($type) {
+                            return Html::a( '<span class="icon fa fa-reply"></span> ', '/admin/content/unarchive?id='.$model->id.'&type='.$type, [
                                 'class' => 'btn btn-sm btn-primary isDel',
                                 'title' => 'Восстановить статью'
                             ]);
                         },
-                        'delete' => function($url, $model) {
-                            return Html::a( '<span class="icon fa fa-trash"></span> ', $url, [
+                        'delete' => function($url, $model) use ($type) {
+                            return Html::a( '<span class="icon fa fa-trash"></span> ', $url.'&type='.$type, [
                                 'class' => 'btn btn-sm btn-danger isDel',
                                 'title' => 'Удалить безвозвратно'
                             ]);
