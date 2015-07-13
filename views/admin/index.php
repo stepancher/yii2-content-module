@@ -39,7 +39,7 @@ foreach ($dataProviders as $title => $dataProvider) {
                     'header' => Yii::t('content', 'Image'),
                     'format' => ['image',['width'=>'100']],
                     'value' => function ($model) {
-                        return $model->getImageUrl() ? $model->getImageUrl() : 'no_image';
+                        return $model->getImageUrl() ? $model->getImageUrl() : '';
                     }
                 ],
                 [
