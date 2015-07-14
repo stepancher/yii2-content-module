@@ -10,7 +10,8 @@ use \stepancher\content\assets\ContentAsset;
  * @var stepancher\content\models\Content $content
  */
 
-$this->title = Yii::t('content', 'Archive') . ($title ?  ' (' . $title . ')' : '');
+$title = $title ? $title : Yii::t('content', 'Articles');
+$this->title = Yii::t('content', 'Archive') . ' (' . $title . ')';
 $this->params['breadcrumbs'][] = ['label'=>$title,'url'=>'/admin/content/index?type='.$type];
 $this->params['breadcrumbs'][] = ['label'=>$this->title,'url'=>''];
 

@@ -89,7 +89,7 @@ class AdminController extends Controller
                 $dataProviders[$name] = new ActiveDataProvider(
                     [
                         'query' => $queryTMP->andWhere(['lang' => $lang]),
-                        'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
+                        'sort'=> ['defaultOrder' => ['sort' => SORT_DESC]]
                     ]
                 );
             }
@@ -97,7 +97,7 @@ class AdminController extends Controller
             $dataProviders[' '] = new ActiveDataProvider(
                 [
                     'query' => $query,
-                    'sort'=> ['defaultOrder' => ['sort' => SORT_ASC]]
+                    'sort'=> ['defaultOrder' => ['sort' => SORT_DESC]]
                 ]
             );
         }
