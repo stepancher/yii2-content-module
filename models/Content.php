@@ -2,9 +2,11 @@
 
 namespace stepancher\content\models;
 
+use common\models\User;
 use Faker\Provider\cs_CZ\DateTime;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "content".
@@ -26,6 +28,9 @@ use vova07\fileapi\behaviors\UploadBehavior;
  * @property string $sort
  * @property string $type
  * @property string $lang
+ * @property string $on_main
+ * @property string $created_by
+ * @property string $updated_by
  */
 class Content extends \yii\db\ActiveRecord
 {
@@ -48,7 +53,12 @@ class Content extends \yii\db\ActiveRecord
                         'url' => \Yii::$app->getModule("content")->imageUrl.'/'
                     ]
                 ]
-            ]
+            ],
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by'
+            ],
         ];
     }
 
@@ -78,9 +88,9 @@ class Content extends \yii\db\ActiveRecord
             [['header','url'], 'required', 'message' => \Yii::t('content', 'Cannot be blank')],
             [['url'], 'unique', 'message' => \Yii::t('content', 'Must be ubique')],
             [['short_text', 'keywords', 'text', 'url', 'description'], 'string'],
-            [['visible'], 'boolean'],
+            [['visible', 'on_main'], 'boolean'],
             [['sort'], 'integer', 'message' => \Yii::t('content', 'Must be an integer')],
-            [['create_time', 'update_time','date_show', 'date_hide'], 'safe'],
+            [['create_time', 'update_time','date_show', 'date_hide', 'created_by', 'updated_by'], 'safe'],
             [['header', 'title'], 'string', 'max' => 250, 'tooLong' => \Yii::t('content', 'maximum character', ['n' => 250])],
             ['image_file', 'safe'/*, 'skipOnEmpty' => true*/]
 
@@ -132,6 +142,9 @@ class Content extends \yii\db\ActiveRecord
             'date_hide' => \Yii::t('content', 'Date hide'),
             'type' => \Yii::t('content', 'Type'),
             'lang' => \Yii::t('content', 'Language'),
+            'on_main' => \Yii::t('content', 'Show on main'),
+            'created_by' => \Yii::t('content', 'Created By'),
+            'updated_by' => \Yii::t('content', 'Updated By'),
         ];
     }
 
@@ -179,5 +192,15 @@ class Content extends \yii\db\ActiveRecord
     public function getImageUrl()
     {
         return $this->image_file ? '/upload/content/'.$this->image_file : null;
+    }
+
+    /**
+     * Возвращает автора статьи
+     * @return \common\models\User
+     */
+    public function getUser()
+    {
+        return $this
+            ->hasOne(User::className(), ['id' => 'created_by']);
     }
 }

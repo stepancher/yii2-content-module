@@ -134,8 +134,10 @@ if ($model->isNewRecord) {
             <?= $form->field($model, 'lang')->dropDownList(Yii::$app->params['languages']) ?>
         <?php endif; ?>
 
-         <?= Html::activeCheckbox($model, 'visible'); ?>
-         <?= Html::error($model, 'visible'); ?>
+        <?= Html::activeCheckbox($model, 'visible'); ?>
+        <?= Html::error($model, 'visible'); ?>
+
+        <?= Html::activeCheckbox($model, 'on_main'); ?>
  
          <div class="form-group">
              <?= Html::submitButton($model->isNewRecord ? Yii::t('content', 'Create') : Yii::t('content', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
