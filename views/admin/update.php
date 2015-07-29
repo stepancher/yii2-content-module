@@ -130,6 +130,8 @@ if ($model->isNewRecord) {
             <?= $form->field($model, 'type')->dropDownList($types) ?>
         <?php endif; ?>
 
+        <?= $form->field($model, 'created_by')->dropDownList(\common\models\User::getAllToList(), ['prompt' => '---']) ?>
+
         <?php if(\Yii::$app->getModule("content")->useI18n): ?>
             <?= $form->field($model, 'lang')->dropDownList(Yii::$app->params['languages']) ?>
         <?php endif; ?>

@@ -54,11 +54,6 @@ class Content extends \yii\db\ActiveRecord
                     ]
                 ]
             ],
-            [
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by'
-            ],
         ];
     }
 
@@ -171,6 +166,9 @@ class Content extends \yii\db\ActiveRecord
         parent::beforeSave($insert);
         $time = new \DateTime();
         $time = $time->format('Y-m-d H:i:s');
+
+        $this->created_by = $this->created_by ? $this->created_by : Yii::$app->user->id;
+        $this->updated_by = Yii::$app->user->id;
         if ($this->isNewRecord) {
             $this->create_time = $time;
             $this->update_time = $time;
@@ -179,9 +177,6 @@ class Content extends \yii\db\ActiveRecord
         } else {
             $this->update_time = $time;
         }
-
-
-
         return true;
     }
 
