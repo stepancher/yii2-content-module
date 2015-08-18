@@ -8,7 +8,7 @@ use yii\helpers\Url;
             && Yii::$app->request->get('type') === $type) : ?>active<?php endif; ?>">
             <a href="<?= Url::toRoute(['/content/admin/index', 'type' => $type]) ?>">
                 <i class="fa fa-newspaper-o"></i>
-                <?= $title ?>
+                <span><?= $title ?></span>
             </a>
         </li>
     <?php endforeach; ?>
