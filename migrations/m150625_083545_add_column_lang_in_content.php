@@ -1,6 +1,5 @@
 <?php
 
-namespace stepancher\content\migrations;
 
 use yii\db\Schema;
 use yii\db\Migration;
