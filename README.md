@@ -37,5 +37,6 @@ php composer.phar require --prefer-dist stepancher/yii2-content-module "*"
 * Создать роуты в бэкенде
     'content' =>'content/admin',
     'content/<slug>'=>'content/admin/<slug>',
+* Раздать права пользователю или роли на просмотр и редактирование статей
 
  

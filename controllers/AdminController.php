@@ -33,7 +33,13 @@ class AdminController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['admin'], //все действия по работе со статьями только для админа
+                        'roles' => ['r_content'],
+                        'actions' => ['index', 'archives']
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['w_content'],
+                        'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible']
                     ]
                 ],
             ],
