@@ -7,6 +7,7 @@ use Faker\Provider\cs_CZ\DateTime;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
 use yii\behaviors\BlameableBehavior;
+use yii\caching\TagDependency;
 
 /**
  * This is the model class for table "content".
@@ -164,6 +165,10 @@ class Content extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         parent::beforeSave($insert);
+
+        // Сбрасываем кэш
+        TagDependency::invalidate(Yii::$app->cache, $this->className());
+
         $time = new \DateTime();
         $time = $time->format('Y-m-d H:i:s');
 
