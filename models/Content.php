@@ -203,4 +203,15 @@ class Content extends \yii\db\ActiveRecord
         return $this
             ->hasOne(User::className(), ['id' => 'created_by']);
     }
+
+    /**
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+        // Сбрасываем кэш
+        TagDependency::invalidate(Yii::$app->cache, $this->className());
+
+        return parent::beforeDelete();
+    }
 }
