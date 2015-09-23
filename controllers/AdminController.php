@@ -34,12 +34,13 @@ class AdminController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['r_content'],
-                        'actions' => ['index', 'archives']
+                        'actions' => ['index', 'archives', 'images-get']
                     ],
                     [
                         'allow' => true,
                         'roles' => ['w_content'],
-                        'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible']
+                        'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible',
+                        'fileapi-upload', 'image-upload']
                     ]
                 ],
             ],
