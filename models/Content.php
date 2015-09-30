@@ -4,6 +4,7 @@ namespace stepancher\content\models;
 
 use common\models\User;
 use Faker\Provider\cs_CZ\DateTime;
+use mkv\rollback\behaviors\RollbackBehavior;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
 use yii\behaviors\BlameableBehavior;
@@ -55,6 +56,9 @@ class Content extends \yii\db\ActiveRecord
                     ]
                 ]
             ],
+            'rollback' => [
+                'class' => RollbackBehavior::className(),
+            ]
         ];
     }
 
@@ -213,5 +217,17 @@ class Content extends \yii\db\ActiveRecord
         TagDependency::invalidate(Yii::$app->cache, $this->className());
 
         return parent::beforeDelete();
+    }
+
+    /**
+     * Список типов статей
+     * @return mixed
+     */
+    public static function getTypes()
+    {
+        if(\Yii::$app->getModule("content")->types) {
+            return \Yii::$app->getModule("content")->types;
+        }
+        return array();
     }
 }

@@ -151,3 +151,4 @@ if ($model->isNewRecord) {
      </div>
     </div>
 </div>
+<?= \mkv\rollback\widgets\RollbackWidget::widget(['model' => $model, 'preview' => '@vendor/stepancher/yii2-content-module/views/admin/_form']) ?>
