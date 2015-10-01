@@ -26,13 +26,13 @@ class DefaultController extends Controller
             if (!$model) {
                 throw new HttpException('404', Yii::t('content', 'Page not found'));
             }
-            return $this->render('show', ['model' => $model]);
+            return $this->render(\Yii::$app->getModule('content')->view('show'), ['model' => $model]);
         }else{
-            return $this->render('list');
+            return $this->render(\Yii::$app->getModule('content')->view('list'));
         }
 	}
     public function actionList()
     {
-        return $this->render('list');
+        return $this->render(\Yii::$app->getModule('content')->view('list'));
     }
 }

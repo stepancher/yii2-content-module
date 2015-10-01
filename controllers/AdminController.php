@@ -109,7 +109,7 @@ class AdminController extends Controller
             );
         }
 
-        return $this->render('index', [
+        return $this->render(\Yii::$app->getModule('content')->view('index'), [
             'dataProviders' => $dataProviders,
             'title' => $title,
             'type' => $type
@@ -147,7 +147,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->render('update',['model'=>$model, 'types'=>$types]);
+        return $this->render(\Yii::$app->getModule('content')->view('update'),['model'=>$model, 'types'=>$types]);
     }
 
     /**
@@ -172,7 +172,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->render('update',['model'=>$model, 'types'=>$types]);
+        return $this->render(\Yii::$app->getModule('content')->view('update'),['model'=>$model, 'types'=>$types]);
     }
 
     /**
@@ -309,7 +309,7 @@ class AdminController extends Controller
             ]
         );
 
-        return $this->render('archive', [
+        return $this->render(\Yii::$app->getModule('content')->view('archive'), [
             'dataProvider' => $dataProvider,
             'title' => $title,
             'type' => $type

@@ -75,6 +75,13 @@ class Content extends \yii\base\Module
     public $modelClasses = [] ;
 
     /**
+     * See description of $modelClasses
+     * @var array
+     */
+    public $modelViews = [];
+
+
+    /**
      * @var array Storage for models based on $modelClasses
      */
     protected  $_models;
@@ -89,6 +96,7 @@ class Content extends \yii\base\Module
         parent::init();
         $this->checkModuleProperties();
         $this->modelClasses = array_merge($this->getDefaultModelClasses(), $this->modelClasses);
+        $this->modelViews = array_merge($this->getDefaultModelViews(), $this->modelViews);
         if (empty(\Yii::$app->i18n->translations['content'])) {
             \Yii::$app->i18n->translations['content'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
@@ -144,10 +152,34 @@ class Content extends \yii\base\Module
     {
         // use single quotes so nothing gets escaped
         return [
-            'Content'       => 'stepancher\content\models\Content',
+            'Content' => 'stepancher\content\models\Content',
         ];
     }
 
+    /**
+     * Get view of model
+     *
+     * @param string $name
+     * @return string
+     */
+    public function view($name)
+    {
+        return $this->modelViews[strtolower($name)];
+    }
+
+    /**
+     * Get default model views
+     */
+    protected function getDefaultModelViews()
+    {
+        return [
+            'archive' => 'archive',
+            'index' => 'index',
+            'update' => 'update',
+            'show' => 'show',
+            'list' => 'list',
+        ];
+    }
 
     /**
      * @param null $str

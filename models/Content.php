@@ -55,9 +55,6 @@ class Content extends \yii\db\ActiveRecord
                         'url' => \Yii::$app->getModule("content")->imageUrl.'/'
                     ]
                 ]
-            ],
-            'rollback' => [
-                'class' => RollbackBehavior::className(),
             ]
         ];
     }
