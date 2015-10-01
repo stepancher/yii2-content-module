@@ -32,7 +32,7 @@ class ContentOutput extends Widget
                     ->andWhere('visible = true')
                     ->orderBy('sort'),
                 'pagination' => [
-                    'pageSize' => 2,
+                    'pageSize' => 20,
                 ],
             ]
         );
