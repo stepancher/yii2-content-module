@@ -3,7 +3,7 @@
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m150921_081811_add_permissions extends Migration
+class m150921_081812_add_permissions extends Migration
 {
     private $permissions = [
         'r_content' => 'Просмотр статей',
