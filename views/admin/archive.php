@@ -133,7 +133,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                 ],
                 'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
             ],
-            'options' => ['id' => 'dynagrid-content'],
+            'options' => ['id' => 'dynagrid-archive-' . $this->context->module->id],
         ]
     ));
 } else {
@@ -149,7 +149,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                 ],
                 'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
             ],
-            'options' => ['id' => 'dynagrid-content'],
+            'options' => ['id' => 'dynagrid-archive-' . $this->context->module->id],
         ]
     );
 }
