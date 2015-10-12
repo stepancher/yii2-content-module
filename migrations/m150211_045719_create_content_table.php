@@ -27,15 +27,18 @@ class m150211_045719_create_content_table extends Migration
             "update_time"   => Schema::TYPE_TIMESTAMP   . ' null default null',
             "date_show"     => Schema::TYPE_TIMESTAMP   . ' null',
             "date_hide"     => Schema::TYPE_TIMESTAMP   . ' null',
+            "lang"          => Schema::TYPE_STRING . " DEFAULT 'ru'",
+            "is_archive"    => Schema::TYPE_BOOLEAN . " DEFAULT FALSE",
+            "on_main"       => Schema::TYPE_BOOLEAN . ' DEFAULT FALSE',
+            "created_by"    => Schema::TYPE_INTEGER,
+            "updated_by"    => Schema::TYPE_INTEGER,
         ], $tableOptions);
-        $this->createIndex('unique_key_url','content','url', true);
+
+        $this->createIndex('unique_key_url', 'content', 'url', true);
     }
 
     public function safeDown()
     {
-
         $this->dropTable('content');
-        echo "m150211_045719_create_content_table таблица content была успешно удалена\n";
-        return true;
     }
 }
