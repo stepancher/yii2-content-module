@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use \stepancher\content\assets\ContentAsset;
+use stepancher\content\assets\ContentAsset;
+use stepancher\content\Content;
+use kartik\grid\GridView;
+use kartik\dynagrid\DynaGrid;
 
 /**
  * @var yii\web\View $this
@@ -10,73 +12,146 @@ use \stepancher\content\assets\ContentAsset;
  * @var stepancher\content\models\Content $content
  */
 
-$title = $title ? $title : Yii::t('content', 'Articles');
+ContentAsset::register($this);
+
+$title = Yii::$app->getModule($this->context->module->id)->title;
 $this->title = Yii::t('content', 'Archive') . ' (' . $title . ')';
-$this->params['breadcrumbs'][] = ['label'=>$title,'url'=>'/admin/content/index?type='.$type];
-$this->params['breadcrumbs'][] = ['label'=>$this->title,'url'=>''];
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => '/admin/content/index'];
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ''];
 
-$actionButtons = ''
-    . Html::submitButton('<i class="icon fa fa-reply"></i>', ['class' => 'btn btn-sm btn-primary', 'name' => \stepancher\content\controllers\AdminController::ACTION_UNARCHIVE, 'title' => 'Восстановить выбранные записи'])
-    . Html::submitButton('<i class="icon fa fa-trash"></i>', ['class' => 'btn btn-sm btn-danger isDel', 'name' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'title' => 'Удалить выбранные записи', 'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?')])
-;
+/* @var \stepancher\content\models\Content $module */
+$module = Yii::$app->getModule($this->context->module->id)->model('Content', ['id' => $this->context->module->id]);
+
 ?>
-<div class="content-index">
+<?php
+// Default settings
+$columns = [
+    ['class' => 'kartik\grid\SerialColumn', 'order' => DynaGrid::ORDER_FIX_LEFT],
+    [
+        'class' => 'kartik\grid\ActionColumn',
+        'options' => ['style' => 'width:100px'],
 
-    <div class="box">
-        <?php $form = \yii\bootstrap\ActiveForm::begin(['action' => '/admin/content/group-action', 'method' => 'POST']); ?>
-        <?= Html::hiddenInput('model', \stepancher\content\models\Content::className()) ?>
-        <?= Html::hiddenInput('url', Yii::$app->request->url) ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'layout' => "<div class='box-body'>{items}</div><div class='box-footer'><div class='row'><div class='col-xs-3 text-left'>".$actionButtons."</div><div class='col-sm-6'>{summary}</div><div class='col-sm-6'>{pager}</div></div></div>",
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                [
-                    'class' => 'yii\grid\CheckboxColumn',
-                    'multiple' => true,
-                    'name' => 'Content'
-                ],
-                [
-                    'header' => Yii::t('content', 'Image'),
-                    'format' => ['image',['width'=>'100']],
+        'dropdown' => false,
+        'order' => DynaGrid::ORDER_FIX_RIGHT,
+        'template' => '{unarchive} {delete}',
+        'buttons' => [
+            'unarchive' => function($url, $model) {
+                return Html::a('<span class="icon fa fa-reply"></span> ', $url, [
+                    'class' => 'btn btn-sm btn-primary',
+                    'title' => 'Восстановить',
+                ]);
+            },
+            'delete' => function($url, $model) {
+                return Html::a('<span class="icon fa fa-trash"></span> ', $url, [
+                    'class' => 'btn btn-sm btn-danger',
+                    'title' => Yii::t('yii', 'Delete'),
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                ]);
+            }
+        ]
+    ],
+    [
+        'class' => 'kartik\grid\CheckboxColumn',
+        'order' => DynaGrid::ORDER_FIX_LEFT,
+        'multiple' => true,
+    ],
+];
+
+// Attribute settings
+foreach($module->attributes as $attr => $i) {
+    $value = $module->getConfigAttribute($attr);
+    if($value) {
+        switch ($value['type']) {
+            case Content::ATTR_TYPE_IMAGE:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => ['image', ['width' => '100']],
                     'value' => function ($model) {
                         return $model->getImageUrl() ? $model->getImageUrl() : '';
-                    }
-                ],
-                'header',
-                [
-                    'attribute' => 'visible',
-                    'format' => 'boolean',
-                ],
-                [
-                    'attribute' => 'sort',
-                    'format' => 'raw',
-                    'value' => function($data) {
-                        return ($data->sort ? $data->sort : 'Нет');
                     },
-                ],
-                'date_show',
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template'=>'{restore}{delete}',
-                    'buttons' => [
-                        'restore' => function($url, $model) use ($type) {
-                            return Html::a( '<span class="icon fa fa-reply"></span> ', '/admin/content/unarchive?id='.$model->id.'&type='.$type, [
-                                'class' => 'btn btn-sm btn-primary isDel',
-                                'title' => 'Восстановить статью'
-                            ]);
-                        },
-                        'delete' => function($url, $model) use ($type) {
-                            return Html::a( '<span class="icon fa fa-trash"></span> ', $url.'&type='.$type, [
-                                'class' => 'btn btn-sm btn-danger isDel',
-                                'title' => 'Удалить безвозвратно'
-                            ]);
-                        },
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_DATE:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => ['raw', ['width' => '100']],
+                    'value' => function ($data) use ($attr) {
+                        return Yii::$app->formatter->asDateTime($data->$attr, Yii::$app->formatter->dateFormat) . ' <small style="color:gray;">' . Yii::$app->formatter->asDateTime($data->$attr, Yii::$app->formatter->timeFormat) . '</small>';
+                    },
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_BOOLEAN:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => 'raw',
+                    'value' => function($data) use ($attr) {
+                        return Html::checkbox($attr, $data->$attr);
+                    },
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_DROPDOWN:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'value' => function ($data) use ($attr, $value) {
+                        return isset($value['items'][$data->$attr]) ? $value['items'][$data->$attr] : '';
+                    },
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => $value['items'],
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
                     ],
-                ],
-            ],
-        ]) ?>
-        <?php \yii\bootstrap\ActiveForm::end(); ?>
-    </div>
+                    'filterInputOptions' => ['placeholder' => '---'],
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            default:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+        }
+    }
+}
 
-</div>
+if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
+    DynaGrid::begin(\yii\helpers\ArrayHelper::merge(\stepancher\adminlteTheme\config\AnminLteThemeConfig::getDefaultConfigDynagrid(), [
+            'columns' => $columns,
+            'gridOptions' => [
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'panel' => [
+                    'after' => Html::a('<i class="icon glyphicon fa fa-reply"></i> &nbsp&nbspВосстановить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_UNARCHIVE, 'class' => 'btn btn-primary btn-multiple', 'title' => 'Восстановить выбранные записи']) .
+                        Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи'])
+                        . '<div class="pull-right">{pager}</div>',
+                ],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+            ],
+            'options' => ['id' => 'dynagrid-content'],
+        ]
+    ));
+} else {
+    DynaGrid::begin([
+            'columns' => $columns,
+            'gridOptions' => [
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'panel' => [
+                    'after' => Html::a('<i class="icon glyphicon fa fa-reply"></i> &nbsp&nbspВосстановить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_UNARCHIVE, 'class' => 'btn btn-primary btn-multiple', 'title' => 'Восстановить выбранные записи']) .
+                        Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи'])
+                        . '<div class="pull-right">{pager}</div>',
+                ],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+            ],
+            'options' => ['id' => 'dynagrid-content'],
+        ]
+    );
+}
+DynaGrid::end();
+?>

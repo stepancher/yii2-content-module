@@ -1,122 +1,155 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
-use \stepancher\content\assets\ContentAsset;
+use kartik\grid\GridView;
+use kartik\dynagrid\DynaGrid;
+use stepancher\content\assets\ContentAsset;
+use stepancher\content\Content;
 
-/**
- * @var yii\web\View $this
- * @var yii\data\ActiveDataProvider $dataProvider
- * @var stepancher\content\models\Content $content
- */
+/* @var $this yii\web\View */
+/* @var $searchModel stepancher\content\models\ContentSearch */
+/** @var $dataProvider yii\data\ActiveDataProvider */
 
 ContentAsset::register($this);
 
-$this->title = ($title) ? $title : Yii::t('content', 'Content');
-$this->params['breadcrumbs'][] = ['label'=>$this->title,'url'=>''];
+$this->title = Yii::$app->getModule($this->context->module->id)->title;
+$this->params['breadcrumbs'][] = ['label' => $this->title,'url' => ''];
 
-$actionButtons = ''
-    . Html::submitButton('<i class="icon fa fa-trash"></i>', ['class' => 'btn btn-sm btn-danger isDel', 'name' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'title' => 'Удалить выбранные записи', 'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?')])
-;
+/* @var \stepancher\content\models\Content $module */
+$module = Yii::$app->getModule($this->context->module->id)->model('Content', ['id' => $this->context->module->id]);
 
-$archiveButton = Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/content/archives?type='.$type, ['class' => 'btn btn-warning']);
+?>
 
-$tabs = array();
-foreach ($dataProviders as $title => $dataProvider) {
-    $tabs[] = [
-        'label' => $title,
-        'content' => GridView::widget([
-            'dataProvider' => $dataProvider,
-            'layout' => "<div class='box-body'>{items}</div><div class='box-footer'><div class='row'><div class='col-xs-3 text-left'>".$actionButtons."</div><div class='col-sm-6'>{summary}</div><div class='col-sm-6'>{pager}</div><div class='col-xs-3 text-right'>".$archiveButton."</div></div></div>",
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                [
-                    'class' => 'yii\grid\CheckboxColumn',
-                    'multiple' => true,
-                    'name' => 'Content'
-                ],
-                [
-                    'header' => Yii::t('content', 'Image'),
-                    'format' => ['image',['width'=>'100']],
+
+<?php
+// Default settings
+$columns = [
+    ['class' => 'kartik\grid\SerialColumn', 'order' => DynaGrid::ORDER_FIX_LEFT],
+    [
+        'class' => 'kartik\grid\ActionColumn',
+        'options' => ['style' => 'width:100px'],
+
+        'dropdown' => false,
+        'order' => DynaGrid::ORDER_FIX_RIGHT,
+        'template' => '{update} {archive}',
+        'buttons' => [
+            'update' => function($url, $model) {
+                return Html::a('<span class="icon fa fa-edit"></span> ', $url, [
+                    'class' => 'btn btn-sm btn-primary',
+                    'title' => Yii::t('yii', 'Edit'),
+                ]);
+            },
+            'archive' => function($url, $model) {
+                return Html::a('<span class="icon fa fa-trash"></span> ', $url, [
+                    'class' => 'btn btn-sm btn-danger',
+                    'title' => Yii::t('yii', 'Delete'),
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                ]);
+            }
+        ]
+    ],
+    [
+        'class' => 'kartik\grid\CheckboxColumn',
+        'order' => DynaGrid::ORDER_FIX_LEFT,
+        'multiple' => true,
+    ],
+];
+
+// Attribute settings
+foreach($module->attributes as $attr => $i) {
+    $value = $module->getConfigAttribute($attr);
+    if($value) {
+        switch ($value['type']) {
+            case Content::ATTR_TYPE_IMAGE:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => ['image', ['width' => '100']],
                     'value' => function ($model) {
                         return $model->getImageUrl() ? $model->getImageUrl() : '';
-                    }
-                ],
-                [
-                    'attribute'=>'header',
-                    'format'=>'raw',
-                    'value'=>function($data) use($type) {
-                        return Html::a($data->header,\yii\helpers\Url::toRoute(['/content/admin/update','id'=>$data->id,'type'=>$type]));
                     },
-                ],
-                [
-                    'attribute' => 'visible',
-                    'format' => 'raw',
-                    'value' => function($data) {
-                        return Html::checkbox('visible', $data->visible, ['class' => 'visible_checkbox','data-id' => $data->id]);
-                    }
-                ],
-                [
-                    'attribute' => 'sort',
-                    'format' => 'raw',
-                    'value' => function($data) {
-                        $sort = Html::button('<i class="icon icon fa fa-edit">'.($data->sort ? $data->sort : 'Нет').'</i>', [
-                            'title' => 'Редактировать',
-                            'class' => 'sort_input'
-                        ]);
-
-                        $input = \yii\widgets\MaskedInput::widget([
-                            'name' => 'sort',
-                            'mask' => '9{1,10}',
-                            'value' => ($data->sort ? $data->sort : ''),
-                            'options' => [
-                                'class' => 'sort_change input-sm',
-                                'style' => 'cursor: pointer; width: 60px;',
-                                'data-id' => $data->id
-                            ]
-                        ]);
-
-                        $button = Html::a('OK', '', ['class' => 'sort_button btn btn-success btn-sm']);
-
-                        return $sort.$input.$button;
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_DATE:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => ['raw', ['width' => '100']],
+                    'value' => function ($data) use ($attr) {
+                        return Yii::$app->formatter->asDateTime($data->$attr, Yii::$app->formatter->dateFormat) . ' <small style="color:gray;">' . Yii::$app->formatter->asDateTime($data->$attr, Yii::$app->formatter->timeFormat) . '</small>';
                     },
-                ],
-                'date_show',
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template'=>'{delete}',
-                    'buttons' => [
-                        'delete' => function($url, $model) use($type) {
-                            return Html::a( '<span class="icon fa fa-trash"></span> ', '/admin/content/archive?id='.$model->id.'&type='.$type, [
-                                'class' => 'btn btn-sm btn-danger isDel'
-                            ]);
-                        }
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_BOOLEAN:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'format' => 'raw',
+                    'value' => function($data) use ($attr) {
+                        return Html::checkbox($attr, $data->$attr);
+                    },
+                    'filter' => false,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            case Content::ATTR_TYPE_DROPDOWN:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'value' => function ($data) use ($attr, $value) {
+                        return isset($value['items'][$data->$attr]) ? $value['items'][$data->$attr] : '';
+                    },
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => $value['items'],
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
                     ],
-                ],
-            ],
-        ]),
-//        'active' => true
-    ];
+                    'filterInputOptions' => ['placeholder' => '---'],
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+            default:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'visible' => isset($value['visible']) ? $value['visible'] : true
+                ];
+                break;
+        }
+    }
 }
-?>
-<div class="content-index">
-    <p>
-        <?= Html::a('<i class="btn-label icon fa fa-plus"></i> '.Yii::t('content', 'Add', [
-          'modelClass' => 'content',
-        ]), \yii\helpers\Url::toRoute(['create?type='.$type]), ['class' => 'btn btn-success']) ?>
-    </p>
-    
-    <div id="content-list">
-        <div class="row">
-            <?php $form = \yii\bootstrap\ActiveForm::begin(['action' => '/admin/content/group-action', 'method' => 'POST']); ?>
-                <?= Html::hiddenInput('model', \stepancher\content\models\Content::className()) ?>
-                <?= Html::hiddenInput('url', Yii::$app->request->url) ?>
-                <?= \yii\bootstrap\Tabs::widget([
-                    'items' => $tabs,
-                    'itemOptions' => ['class' => 'panel']
-                ]) ?>
-            <?php \yii\bootstrap\ActiveForm::end(); ?>
-        </div>
-    </div>
 
-</div>
+if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
+    DynaGrid::begin(\yii\helpers\ArrayHelper::merge(\stepancher\adminlteTheme\config\AnminLteThemeConfig::getDefaultConfigDynagrid(), [
+            'columns' => $columns,
+            'gridOptions' => [
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'panel' => [
+                    'before' => Html::a('<i class="btn-label glyphicon fa fa-plus"></i> &nbsp&nbsp' . \Yii::t('content', 'Create'), ['create'], ['class' => 'btn btn-labeled btn-success no-margin-t']),
+                    'after' => Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи']) .
+                        Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/' . $this->context->module->id . '/archives', ['class' => 'btn btn-warning pull-right']) . '<div class="pull-right">{pager}</div>',
+                ],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+            ],
+            'options' => ['id' => 'dynagrid-content'],
+        ]
+    ));
+} else {
+    DynaGrid::begin([
+            'columns' => $columns,
+            'gridOptions' => [
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'panel' => [
+                    'after' => Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи']) .
+                        Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/' . $this->context->module->id . '/archives', ['class' => 'btn btn-warning pull-right']) . '<div class="pull-right">{pager}</div>',
+                ],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+            ],
+            'options' => ['id' => 'dynagrid-content'],
+        ]
+    );
+}
+DynaGrid::end();
+?>
+

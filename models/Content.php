@@ -3,11 +3,8 @@
 namespace stepancher\content\models;
 
 use common\models\User;
-use Faker\Provider\cs_CZ\DateTime;
-use mkv\rollback\behaviors\RollbackBehavior;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
-use yii\behaviors\BlameableBehavior;
 use yii\caching\TagDependency;
 
 /**
@@ -28,7 +25,6 @@ use yii\caching\TagDependency;
  * @property string $date_hide
  * @property string $keywords
  * @property string $sort
- * @property string $type
  * @property string $lang
  * @property string $on_main
  * @property string $created_by
@@ -37,6 +33,21 @@ use yii\caching\TagDependency;
 class Content extends \yii\db\ActiveRecord
 {
     public $preview_url;
+
+    /**
+     * The ID of this module
+     * @var string
+     */
+    public $moduleId;
+
+    /**
+     * @param array $config - Name-value pairs that will be used to initialize the object properties
+     */
+    public function __construct($config = [])
+    {
+        $this->moduleId = isset($config['id']) ? $config['id'] : 'content';
+        parent::__construct();
+    }
 
     public function behaviors()
     {
@@ -50,9 +61,9 @@ class Content extends \yii\db\ActiveRecord
                         'url' => \Yii::$app->getModule("content")->imageUrl.'/vova/previews'
                     ],
   */                  'image_file' => [
-                        'path' => \Yii::$app->getModule("content")->imageDir.'/',
-                        'tempPath' => \Yii::$app->getModule("content")->imageDir.'/temp',
-                        'url' => \Yii::$app->getModule("content")->imageUrl.'/'
+                        'path' => \Yii::$app->getModule($this->moduleId)->imageDir.'/',
+                        'tempPath' => \Yii::$app->getModule($this->moduleId)->imageDir.'/temp',
+                        'url' => \Yii::$app->getModule($this->moduleId)->imageUrl.'/'
                     ]
                 ]
             ]
@@ -93,10 +104,7 @@ class Content extends \yii\db\ActiveRecord
 
         ];
 
-        if(\Yii::$app->getModule("content")->types) {
-            $rules[] = ['type', 'safe'];
-        }
-        if(\Yii::$app->getModule("content")->useI18n) {
+        if(\Yii::$app->getModule($this->moduleId)->useI18n) {
             $rules[] = ['lang', 'safe'];
         }
 
@@ -137,7 +145,6 @@ class Content extends \yii\db\ActiveRecord
             'sort' => \Yii::t('content', 'Sort'),
             'date_show' => \Yii::t('content', 'Date show'),
             'date_hide' => \Yii::t('content', 'Date hide'),
-            'type' => \Yii::t('content', 'Type'),
             'lang' => \Yii::t('content', 'Language'),
             'on_main' => \Yii::t('content', 'Show on main'),
             'created_by' => \Yii::t('content', 'Created By'),
@@ -151,7 +158,7 @@ class Content extends \yii\db\ActiveRecord
      */
     public function beforeValidate()
     {
-        $module = Yii::$app->getModule('content');
+        $module = Yii::$app->getModule($this->moduleId);
         if (trim($this->short_text) === '')
             $this->short_text = $module->subString($this->text, $module->shortTextLength);
 
@@ -217,14 +224,137 @@ class Content extends \yii\db\ActiveRecord
     }
 
     /**
-     * Список типов статей
+     * Возвращает настройки для атрибутов
+     * @return array
+     */
+    public function getConfigAttributes()
+    {
+        return [
+            'id' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_HIDE,
+                'visible' => false
+            ],
+            'header' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_STRING,
+                'config' => ['maxlength' => 255]
+            ],
+            'short_text' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_ADVANCED_TEXT,
+                'config' => [
+                    'settings' => [
+                        'lang' => 'ru',
+                        'minHeight' => 200,
+                        'imageManagerJson' => '/admin/content/images-get',
+                        'imageUpload' => '/admin/content/image-upload',
+                        'plugins' => [
+                            'imagemanager',
+                            'clips',
+                            'fullscreen'
+                        ]
+                    ]
+                ],
+                'visible' => false
+            ],
+            'text' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_ADVANCED_TEXT,
+                'config' => [
+                    'settings' => [
+                        'lang' => 'ru',
+                        'minHeight' => 200,
+                        'imageManagerJson' => '/admin/content/images-get',
+                        'imageUpload' => '/admin/content/image-upload',
+                        'plugins' => [
+                            'imagemanager',
+                            'clips',
+                            'fullscreen'
+                        ]
+                    ]
+                ],
+                'visible' => false
+            ],
+            'title' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_STRING,
+                'config' => ['maxlength' => 255],
+                'visible' => false
+            ],
+            'description' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_TEXT,
+                'visible' => false
+            ],
+            'keywords' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_TEXT,
+                'visible' => false
+            ],
+            'image_file' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_IMAGE,
+                'config' => [
+                    'settings' => [
+                        'url' => ['/content/fileapi-upload'],
+                        'maxSize'=>'1048576',
+                        'imageTransform'=> [
+                            'maxWidth'=> '177',
+                            'maxHeight'=> '1000'
+                        ]
+                    ],
+                ]
+            ],
+            'url' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_STRING,
+                'visible' => false
+            ],
+            'sort' => ['type' => \stepancher\content\Content::ATTR_TYPE_INTEGER],
+            'date_show' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_DATE,
+                'config' => [
+                    'options' => ['placeholder' => 'Введите время события ...'],
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd hh:ii:ss',
+                        'autoclose' => true,
+                        'todayBtn' => true,
+                        'showMeridian' => true
+                    ]
+                ]
+            ],
+            'date_hide' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_DATE,
+                'config' => [
+                    'options' => ['placeholder' => 'Введите время события...'],
+                    'pluginOptions' => [
+                        'format' => 'yyyy-mm-dd hh:ii:ss',
+                        'autoclose' => true,
+                        'todayBtn' => true,
+                        'showMeridian' => true,
+                    ]
+                ],
+                'visible' => false
+            ],
+            'created_by' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_DROPDOWN,
+                'config' => ['prompt' => '---'],
+                'items' => \common\models\User::getAllToList(),
+                'visible' => false
+            ],
+            'lang' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_DROPDOWN,
+                'items' => \Yii::$app->getModule($this->moduleId)->languages,
+                'visible' => false
+            ],
+            'visible' => ['type' => \stepancher\content\Content::ATTR_TYPE_BOOLEAN],
+            'on_main' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_BOOLEAN,
+                'visible' => false
+            ],
+        ];
+    }
+
+    /**
+     * Возвращает настройку для атрибута
+     * @param $attr
      * @return mixed
      */
-    public static function getTypes()
+    public function getConfigAttribute($attr)
     {
-        if(\Yii::$app->getModule("content")->types) {
-            return \Yii::$app->getModule("content")->types;
-        }
-        return array();
+        $attributes = self::getConfigAttributes();
+        return isset($attributes[$attr]) ? $attributes[$attr] : null;
     }
 }

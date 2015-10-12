@@ -3,6 +3,32 @@
  */
 $(document).ready(function () {
 
+    /**
+     * Групповые действия с элементами
+     */
+    $('a.btn-multiple').on('click', function () {
+
+        if(confirm('Вы действительно хотите выполнить это действие?')) {
+            var obj = $(this);
+            var url = document.location.href;
+            var keys = $('#grid').yiiGridView('getSelectedRows');
+            var model = obj.data('classname');
+            var action = obj.data('action');
+
+            if(keys.length > 0) {
+                $.ajax({
+                    url: $('#grid').data('url'),
+                    type: 'POST',
+                    data: 'keys=' + keys + '&model=' + model + '&action=' + action + '&url=' + url,
+                    success: function (data) {},
+                    dataType: 'json'
+                });
+            }
+        }
+
+        return false;
+    });
+
     // Изменение видимости статей
     $('.visible_checkbox').change(function () {
         var $obj = $(this);

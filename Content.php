@@ -4,13 +4,22 @@ namespace stepancher\content;
 
 use yii\base\InvalidConfigException;
 
-
 /**
  * Class Content - модуль для добавления статей на сайт, подробнее читай README.md
  * @package stepancher\content
  */
 class Content extends \yii\base\Module
 {
+    const
+        ATTR_TYPE_STRING = 'string',
+        ATTR_TYPE_TEXT = 'text',
+        ATTR_TYPE_ADVANCED_TEXT = 'advanced_text',
+        ATTR_TYPE_DATE = 'date',
+        ATTR_TYPE_BOOLEAN = 'boolean',
+        ATTR_TYPE_INTEGER = 'integer',
+        ATTR_TYPE_DROPDOWN = 'dropdown',
+        ATTR_TYPE_HIDE = 'hide',
+        ATTR_TYPE_IMAGE = 'image';
 
     /**
      * @var array List Chars for russian word
@@ -42,6 +51,21 @@ class Content extends \yii\base\Module
     );
 
     public $controllerNamespace = 'stepancher\content\controllers';
+
+    /**
+     * @var string $moduleName - Название модуля
+     */
+    public $title = 'Статьи';
+
+    /**
+     * @var array $languages - Доступные языки
+     */
+    public $languages = ['ru' => 'Русский'];
+
+    /**
+     * @var bool $useDefaultColumns - Использовать стандартный вывод атрибутов модели
+     */
+    public $useDefaultColumns = true;
 
     /**
      * @var string $imageDir - Папка для хранения картинок
@@ -153,6 +177,7 @@ class Content extends \yii\base\Module
         // use single quotes so nothing gets escaped
         return [
             'Content' => 'stepancher\content\models\Content',
+            'ContentSearch' => 'stepancher\content\models\ContentSearch',
         ];
     }
 
@@ -205,14 +230,12 @@ class Content extends \yii\base\Module
      * @param $count
      * @return string
      */
-
-    public function subString($str, $count = 255,$endChars = '...') {
-
-        if (strlen($str)>$count){
+    public function subString($str, $count = 255, $endChars = '...')
+    {
+        if (strlen($str) > $count) {
             $substring = mb_substr($str, 0, $count);
-            $lastSpace = mb_strrpos($substring,' ');
-            return mb_substr($substring,0,$lastSpace).$endChars;
-
+            $lastSpace = mb_strrpos($substring, ' ');
+            return mb_substr($substring, 0, $lastSpace) . $endChars;
         }
         return $str;
     }
