@@ -12,6 +12,8 @@ class Content extends \yii\base\Module
 {
     const
         ATTR_TYPE_STRING = 'string',
+        ATTR_TYPE_TITLE = 'title',
+        ATTR_TYPE_URL = 'url',
         ATTR_TYPE_TEXT = 'text',
         ATTR_TYPE_ADVANCED_TEXT = 'advanced_text',
         ATTR_TYPE_DATE = 'date',

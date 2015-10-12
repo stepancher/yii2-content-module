@@ -235,8 +235,15 @@ class Content extends \yii\db\ActiveRecord
                 'visible' => false
             ],
             'header' => [
-                'type' => \stepancher\content\Content::ATTR_TYPE_STRING,
+                'type' => \stepancher\content\Content::ATTR_TYPE_TITLE,
                 'config' => ['maxlength' => 255]
+            ],
+            'url' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_URL,
+                'visible' => false,
+                'config' => [
+                    'readonly'=>true
+                ]
             ],
             'short_text' => [
                 'type' => \stepancher\content\Content::ATTR_TYPE_ADVANCED_TEXT,
@@ -297,10 +304,6 @@ class Content extends \yii\db\ActiveRecord
                         ]
                     ],
                 ]
-            ],
-            'url' => [
-                'type' => \stepancher\content\Content::ATTR_TYPE_STRING,
-                'visible' => false
             ],
             'sort' => ['type' => \stepancher\content\Content::ATTR_TYPE_INTEGER],
             'date_show' => [
