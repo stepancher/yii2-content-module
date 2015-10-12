@@ -129,7 +129,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                     'after' => Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи']) .
                         Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/' . $this->context->module->id . '/archives', ['class' => 'btn btn-warning pull-right']) . '<div class="pull-right">{pager}</div>',
                 ],
-                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/' . $this->context->module->id . '/group-action'],
             ],
             'options' => ['id' => 'dynagrid-' . $this->context->module->id],
         ]
@@ -144,7 +144,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                     'after' => Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи']) .
                         Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/' . $this->context->module->id . '/archives', ['class' => 'btn btn-warning pull-right']) . '<div class="pull-right">{pager}</div>',
                 ],
-                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/' . $this->context->module->id . '/group-action'],
             ],
             'options' => ['id' => 'dynagrid-' . $this->context->module->id],
         ]

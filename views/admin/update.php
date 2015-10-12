@@ -17,7 +17,7 @@ $this->title = $model->isNewRecord ?
     : 'Редактирование раздела "' . Yii::$app->getModule($this->context->module->id)->title . '"';
 
 $this->params['breadcrumbs'][] =
-    ['label' => Yii::$app->getModule($this->context->module->id)->title, 'url' => \yii\helpers\Url::toRoute('/content/admin')];
+    ['label' => Yii::$app->getModule($this->context->module->id)->title, 'url' => \yii\helpers\Url::toRoute('/'.$this->context->module->id.'/admin')];
 
 if ($model->isNewRecord) {
     $this->params['breadcrumbs'][] = Yii::t('content', 'Create content');

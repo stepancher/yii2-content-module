@@ -16,7 +16,7 @@ ContentAsset::register($this);
 
 $title = Yii::$app->getModule($this->context->module->id)->title;
 $this->title = Yii::t('content', 'Archive') . ' (' . $title . ')';
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => '/admin/content/index'];
+$this->params['breadcrumbs'][] = ['label' => $title, 'url' => '/admin/'.$this->context->module->id.'/index'];
 $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ''];
 
 /* @var \stepancher\content\models\Content $module */
@@ -131,7 +131,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                         Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи'])
                         . '<div class="pull-right">{pager}</div>',
                 ],
-                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/' . $this->context->module->id . '/group-action'],
             ],
             'options' => ['id' => 'dynagrid-archive-' . $this->context->module->id],
         ]
@@ -147,7 +147,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                         Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи'])
                         . '<div class="pull-right">{pager}</div>',
                 ],
-                'options' => ['id' => 'grid', 'data-url' => '/admin/content/group-action'],
+                'options' => ['id' => 'grid', 'data-url' => '/admin/' . $this->context->module->id . '/group-action'],
             ],
             'options' => ['id' => 'dynagrid-archive-' . $this->context->module->id],
         ]
