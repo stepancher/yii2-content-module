@@ -258,6 +258,9 @@ class Content extends \yii\db\ActiveRecord
                             'clips',
                             'fullscreen'
                         ]
+                    ],
+                    'options' => [
+                        'id' => 'content-short_text-' . Yii::$app->security->generateRandomString(6)
                     ]
                 ],
                 'visible' => false
@@ -275,6 +278,9 @@ class Content extends \yii\db\ActiveRecord
                             'clips',
                             'fullscreen'
                         ]
+                    ],
+                    'options' => [
+                        'id' => 'content-text-' . Yii::$app->security->generateRandomString(6)
                     ]
                 ],
                 'visible' => false

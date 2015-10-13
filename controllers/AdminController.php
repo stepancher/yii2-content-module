@@ -99,7 +99,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->render(\Yii::$app->getModule($this->module->id)->view('update'),['model'=>$model]);
+        return $this->render(\Yii::$app->getModule($this->module->id)->view('update'), ['model' => $model, 'moduleId' => $this->module->id]);
     }
 
     /**
@@ -117,7 +117,7 @@ class AdminController extends Controller
             }
         }
 
-        return $this->render(\Yii::$app->getModule($this->module->id)->view('update'),['model'=>$model]);
+        return $this->render(\Yii::$app->getModule($this->module->id)->view('update'), ['model' => $model, 'moduleId' => $this->module->id]);
     }
 
     /**

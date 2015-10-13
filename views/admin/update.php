@@ -12,17 +12,19 @@ use stepancher\content\Content;
  */
 stepancher\content\assets\ContentAsset::register($this); //это ассет модуля, нет! мы не запихнем его ко всем ассетам
 
-$this->title = $model->isNewRecord ?
-    'Создание раздела "' . Yii::$app->getModule($this->context->module->id)->title . '"'
-    : 'Редактирование раздела "' . Yii::$app->getModule($this->context->module->id)->title . '"';
+if(!$this->title) {
+    $this->title = $model->isNewRecord ?
+        'Создание раздела "' . Yii::$app->getModule($moduleId)->title . '"'
+        : 'Редактирование раздела "' . Yii::$app->getModule($moduleId)->title . '"';
 
-$this->params['breadcrumbs'][] =
-    ['label' => Yii::$app->getModule($this->context->module->id)->title, 'url' => \yii\helpers\Url::toRoute('/'.$this->context->module->id.'/admin')];
+    $this->params['breadcrumbs'][] =
+        ['label' => Yii::$app->getModule($moduleId)->title, 'url' => \yii\helpers\Url::toRoute('/' . $moduleId . '/admin')];
 
-if ($model->isNewRecord) {
-    $this->params['breadcrumbs'][] = Yii::t('content', 'Create content');
-} else {
-    $this->params['breadcrumbs'][] = $this->title;
+    if ($model->isNewRecord) {
+        $this->params['breadcrumbs'][] = Yii::t('content', 'Create content');
+    } else {
+        $this->params['breadcrumbs'][] = $this->title;
+    }
 }
 ?>
 
