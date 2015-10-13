@@ -32,7 +32,7 @@ class ContentSearch extends Content
     {
         return [
             [['id', 'sort', 'created_by', 'updated_by'], 'integer'],
-            [['header', 'title', 'image_file', 'short_text', 'text', 'url', 'description', 'keywords', 'create_time', 'update_time', 'date_show', 'date_hide', 'type', 'lang'], 'safe'],
+            [['header', 'title', 'image_file', 'short_text', 'text', 'url', 'description', 'keywords', 'create_time', 'update_time', 'date_show', 'date_hide', 'lang'], 'safe'],
             [['visible', 'is_archive', 'on_main'], 'boolean'],
         ];
     }
@@ -92,7 +92,6 @@ class ContentSearch extends Content
             ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'keywords', $this->keywords])
-            ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'lang', $this->lang]);
 
         return $dataProvider;
