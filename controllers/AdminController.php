@@ -30,12 +30,12 @@ class AdminController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['r_content'],
+                        'roles' => [Yii::$app->getModule($this->module->id)->role('r_content')],
                         'actions' => ['index', 'archives', 'images-get']
                     ],
                     [
                         'allow' => true,
-                        'roles' => ['w_content'],
+                        'roles' => [Yii::$app->getModule($this->module->id)->role('w_content')],
                         'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible',
                         'fileapi-upload', 'image-upload']
                     ]

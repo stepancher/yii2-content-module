@@ -55,6 +55,11 @@ class Content extends \yii\base\Module
     public $controllerNamespace = 'stepancher\content\controllers';
 
     /**
+     * @var array $roles - Роли модуля
+     */
+    public $roles = [];
+
+    /**
      * @var string $moduleName - Название модуля
      */
     public $title = 'Статьи';
@@ -123,6 +128,7 @@ class Content extends \yii\base\Module
         $this->checkModuleProperties();
         $this->modelClasses = array_merge($this->getDefaultModelClasses(), $this->modelClasses);
         $this->modelViews = array_merge($this->getDefaultModelViews(), $this->modelViews);
+        $this->roles = array_merge($this->getDefaultModelRoles(), $this->roles);
         if (empty(\Yii::$app->i18n->translations['content'])) {
             \Yii::$app->i18n->translations['content'] = [
                 'class' => 'yii\i18n\PhpMessageSource',
@@ -205,6 +211,28 @@ class Content extends \yii\base\Module
             'update' => 'update',
             'show' => 'show',
             'list' => 'list',
+        ];
+    }
+
+    /**
+     * Get role of model
+     *
+     * @param string $name
+     * @return string
+     */
+    public function role($name)
+    {
+        return $this->roles[strtolower($name)];
+    }
+
+    /**
+     * Get default model roles
+     */
+    protected function getDefaultModelRoles()
+    {
+        return [
+            'r_content' => 'r_content',
+            'w_content' => 'w_content'
         ];
     }
 
