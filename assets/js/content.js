@@ -96,12 +96,12 @@ $(document).ready(function () {
     //});
 
     // Событие по нажатию на Enter
-    $(document).keydown(function (e) {
-        if(e.keyCode == 13) {
-            $obj = $("input:focus");
-            $obj.next('.sort_button').click();
-
-            return false;
-        }
-    });
+    //$(document).keydown(function (e) {
+    //    if(e.keyCode == 13) {
+    //        $obj = $("input:focus");
+    //        $obj.next('.sort_button').click();
+    //
+    //        return false;
+    //    }
+    //});
 });
