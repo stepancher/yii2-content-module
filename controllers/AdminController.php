@@ -31,13 +31,13 @@ class AdminController extends Controller
                     [
                         'allow' => true,
                         'roles' => [Yii::$app->getModule($this->module->id)->role('r_content')],
-                        'actions' => ['index', 'archives', 'images-get']
+                        'actions' => ['index', 'archives', 'images-get', 'files-get']
                     ],
                     [
                         'allow' => true,
                         'roles' => [Yii::$app->getModule($this->module->id)->role('w_content')],
                         'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible',
-                        'fileapi-upload', 'image-upload']
+                        'fileapi-upload', 'image-upload', 'file-upload']
                     ]
                 ],
             ],
@@ -62,6 +62,18 @@ class AdminController extends Controller
                 'url' => \Yii::$app->getModule($this->module->id)->imageUrl,
                 'path' => \Yii::$app->getModule($this->module->id)->imageDir,
 
+            ],
+            'files-get' => [
+                'class' => 'vova07\imperavi\actions\GetAction',
+                'url' => \Yii::$app->getModule($this->module->id)->imageUrl,
+                'path' => \Yii::$app->getModule($this->module->id)->imageDir,
+                'type' => GetAction::TYPE_FILES,
+            ],
+            'file-upload' => [
+                'class' => 'vova07\imperavi\actions\UploadAction',
+                'url' => \Yii::$app->getModule($this->module->id)->imageUrl,
+                'path' => \Yii::$app->getModule($this->module->id)->imageDir,
+                'uploadOnlyImage' => false
             ],
             'fileapi-upload' => [
                 'class' => FileAPIUpload::className(),

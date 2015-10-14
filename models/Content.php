@@ -253,8 +253,11 @@ class Content extends \yii\db\ActiveRecord
                         'minHeight' => 200,
                         'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
                         'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
+                        'fileUpload' => '/admin/' . $this->moduleId . '/file-upload',
+                        'fileManagerJson' => '/admin/' . $this->moduleId . '/files-get',
                         'plugins' => [
                             'imagemanager',
+                            'filemanager',
                             'clips',
                             'fullscreen'
                         ]
@@ -273,8 +276,11 @@ class Content extends \yii\db\ActiveRecord
                         'minHeight' => 200,
                         'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
                         'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
+                        'fileUpload' => '/admin/' . $this->moduleId . '/file-upload',
+                        'fileManagerJson' => '/admin/' . $this->moduleId . '/files-get',
                         'plugins' => [
                             'imagemanager',
+                            'filemanager',
                             'clips',
                             'fullscreen'
                         ]
