@@ -110,5 +110,5 @@ if (!$this->title) {
         </div>
     </div>
 
-    <?php \yii\bootstrap\ActiveForm::end(); ?>
+    <?php \yii\widgets\ActiveForm::end(); ?>
 
