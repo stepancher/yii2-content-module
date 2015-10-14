@@ -251,8 +251,8 @@ class Content extends \yii\db\ActiveRecord
                     'settings' => [
                         'lang' => 'ru',
                         'minHeight' => 200,
-                        'imageManagerJson' => '/admin/content/images-get',
-                        'imageUpload' => '/admin/content/image-upload',
+                        'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
+                        'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
                         'plugins' => [
                             'imagemanager',
                             'clips',
@@ -271,8 +271,8 @@ class Content extends \yii\db\ActiveRecord
                     'settings' => [
                         'lang' => 'ru',
                         'minHeight' => 200,
-                        'imageManagerJson' => '/admin/content/images-get',
-                        'imageUpload' => '/admin/content/image-upload',
+                        'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
+                        'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
                         'plugins' => [
                             'imagemanager',
                             'clips',
