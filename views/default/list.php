@@ -8,5 +8,5 @@ $this->params['breadcrumbs'][] = $this->title;
 <h1>Статьи</h1>
 
 <div>
-    <?= stepancher\content\widgets\ContentOutput::widget() ?>
+    <?= stepancher\content\widgets\ContentOutput::widget(['moduleId' => $moduleId]) ?>
 </div>

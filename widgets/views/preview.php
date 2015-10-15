@@ -13,6 +13,7 @@ use yii\widgets\ListView;
 	<?= ListView::widget([
 	    'layout'=>'{items}',
 	    'itemView'=>'preview_item',
+        'viewParams' => ['moduleId' => $moduleId],
 	    'dataProvider' => $dataProvider,
 	    'itemOptions'=>['class'=>'col-sm-6 article-item'],
 	])?>

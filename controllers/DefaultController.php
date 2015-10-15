@@ -15,9 +15,10 @@ class DefaultController extends Controller
 	 */
 	public function actionShow($url)
 	{
-        if($url) {
+        $type = Yii::$app->request->get('type', 'content');
+        if ($url) {
             /** @var $contentContent Content */
-            $contentModel = \Yii::$app->getModule($this->module->id)->model("Content");
+            $contentModel = \Yii::$app->getModule($type)->model("Content", ['id' => $type]);
             $model = $contentModel->find()->where('url=:url', ['url' => $url])
                 ->andWhere('EXTRACT(epoch from date_hide) > :time or date_hide is null', ['time' => time()])
                 ->andWhere('EXTRACT(epoch from date_show) < :time or date_show is null', ['time' => time()])
@@ -26,13 +27,14 @@ class DefaultController extends Controller
             if (!$model) {
                 throw new HttpException('404', Yii::t('content', 'Page not found'));
             }
-            return $this->render(\Yii::$app->getModule($this->module->id)->view('show'), ['model' => $model]);
-        }else{
-            return $this->render(\Yii::$app->getModule($this->module->id)->view('list'));
+            return $this->render(\Yii::$app->getModule($type)->view('show'), ['model' => $model]);
+        } else {
+            return $this->render(\Yii::$app->getModule($type)->view('list'));
         }
 	}
+
     public function actionList()
     {
-        return $this->render(\Yii::$app->getModule($this->module->id)->view('list'));
+        return $this->render(\Yii::$app->getModule($this->module->id)->view('list'), ['moduleId' => $this->module->id]);
     }
 }

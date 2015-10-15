@@ -16,30 +16,30 @@ use yii\helpers\Html;
 class ContentOutput extends Widget
 {
     public $onlyLinks = false;
+    public $moduleId;
 
     public function init()
     {
         parent::init();
     }
+
     public function run()
     {
         /** @var Content $model */
-        $model = \Yii::$app->getModule("content")->model("Content");
-        $dataProvider = new ActiveDataProvider(
-            [
-                'query' => $model::find()->where('EXTRACT(epoch from date_hide) > :time or date_hide is null', ['time' => time()])
-                    ->andWhere('EXTRACT(epoch from date_show) < :time or date_show is null', ['time' => time()])
-                    ->andWhere('visible = true')
-                    ->orderBy('sort'),
-                'pagination' => [
-                    'pageSize' => 20,
-                ],
-            ]
-        );
+        $model = \Yii::$app->getModule($this->moduleId)->model("Content", ['id' => $this->moduleId]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $model::find()->where('EXTRACT(epoch from date_hide) > :time or date_hide is null', ['time' => time()])
+                ->andWhere('EXTRACT(epoch from date_show) < :time or date_show is null', ['time' => time()])
+                ->andWhere('visible = true')
+                ->orderBy('sort'),
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
         if ($this->onlyLinks) {
             return $this->render('links', ['dataProvider' => $dataProvider]);
         } else {
-            return $this->render('preview', ['dataProvider' => $dataProvider]);
+            return $this->render('preview', ['dataProvider' => $dataProvider, 'moduleId' => $this->moduleId]);
         }
     }
 }
