@@ -149,7 +149,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                 'label' => '<i class="glyphicon glyphicon-sort"></i> &nbsp&nbsp Сортировка',
             ],
             'storage' => DynaGrid::TYPE_DB,
-            'theme' => 'panel-default',
+//            'theme' => 'panel-default',
             'gridOptions' => [
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
@@ -165,7 +165,7 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
                     'label' => 'Экспорт'
                 ],
                 'panel' => [
-                    'heading' => false,
+//                    'heading' => false,
                     'footer' => false,
                     'after' => Html::a('<i class="icon glyphicon fa fa-reply"></i> &nbsp&nbspВосстановить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_UNARCHIVE, 'class' => 'btn btn-primary btn-multiple', 'title' => 'Восстановить выбранные записи']) .
                         Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_DELETE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи'])
