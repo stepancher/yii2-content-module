@@ -137,10 +137,35 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
 } else {
     DynaGrid::begin([
             'columns' => $columns,
+            'toggleButtonGrid' => [
+                'label' => '<i class="glyphicon glyphicon-wrench"></i> &nbsp&nbspНастройки',
+            ],
+            'toggleButtonFilter' => [
+                'label' => '<i class="glyphicon glyphicon-filter"></i> &nbsp&nbsp Фильтры',
+            ],
+            'toggleButtonSort' => [
+                'label' => '<i class="glyphicon glyphicon-sort"></i> &nbsp&nbsp Сортировка',
+            ],
+            'storage' => DynaGrid::TYPE_DB,
+            'theme' => 'panel-default',
             'gridOptions' => [
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+                'toolbar' => [
+                    [
+                        'content' => Html::a('<i class="glyphicon glyphicon-repeat"></i> Сбросить', [''], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Обновить'])
+                    ], [
+                        'content' => '{dynagridFilter}{dynagridSort}{dynagrid}{toggleData}',
+                    ],
+                    '{export}',
+                ],
+                'export' => [
+                    'label' => 'Экспорт'
+                ],
                 'panel' => [
+                    'heading' => false,
+                    'footer' => false,
+                    'before' => Html::a('<i class="btn-label glyphicon fa fa-plus"></i> &nbsp&nbsp' . \Yii::t('content', 'Create'), ['create'], ['class' => 'btn btn-labeled btn-success no-margin-t']),
                     'after' => Html::a('<i class="icon glyphicon fa fa-trash"></i> &nbsp&nbspУдалить', '#', ['data-classname' => $module::className(), 'data-action' => \stepancher\content\controllers\AdminController::ACTION_ARCHIVE, 'class' => 'btn btn-danger btn-multiple', 'title' => 'Удалить выбранные записи']) .
                         Html::a('<i class="icon fa fa-trash"></i> Перейти в корзину', '/admin/' . $this->context->module->id . '/archives', ['class' => 'btn btn-warning pull-right']) . '<div class="pull-right">{pager}</div>',
                 ],
@@ -152,5 +177,4 @@ if (class_exists('\stepancher\adminlteTheme\config\AnminLteThemeConfig')) {
 }
 DynaGrid::end();
 ?>
-
 
