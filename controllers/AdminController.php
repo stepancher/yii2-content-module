@@ -91,7 +91,7 @@ class AdminController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['is_archive' => false]);
 
-        return $this->render(Yii::$app->getModule('user')->view('index'), [
+        return $this->render(Yii::$app->getModule($this->module->id)->view('index'), [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -246,7 +246,7 @@ class AdminController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['is_archive' => true]);
 
-        return $this->render(Yii::$app->getModule('user')->view('archive'), [
+        return $this->render(Yii::$app->getModule($this->module->id)->view('archive'), [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
