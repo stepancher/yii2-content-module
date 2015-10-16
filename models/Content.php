@@ -6,6 +6,7 @@ use common\models\User;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
 use yii\caching\TagDependency;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "content".
@@ -248,20 +249,12 @@ class Content extends \yii\db\ActiveRecord
             'short_text' => [
                 'type' => \stepancher\content\Content::ATTR_TYPE_ADVANCED_TEXT,
                 'config' => [
-                    'settings' => [
-                        'lang' => 'ru',
-                        'minHeight' => 200,
+                    'settings' => ArrayHelper::merge(isset(Yii::$app->params['imperaviSettings']) ? Yii::$app->params['imperaviSettings'] : [], [
                         'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
                         'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
                         'fileUpload' => '/admin/' . $this->moduleId . '/file-upload',
                         'fileManagerJson' => '/admin/' . $this->moduleId . '/files-get',
-                        'plugins' => [
-                            'imagemanager',
-                            'filemanager',
-                            'clips',
-                            'fullscreen'
-                        ]
-                    ],
+                    ]),
                     'options' => [
                         'id' => 'content-short_text-' . Yii::$app->security->generateRandomString(6)
                     ]
@@ -271,20 +264,12 @@ class Content extends \yii\db\ActiveRecord
             'text' => [
                 'type' => \stepancher\content\Content::ATTR_TYPE_ADVANCED_TEXT,
                 'config' => [
-                    'settings' => [
-                        'lang' => 'ru',
-                        'minHeight' => 200,
+                    'settings' => ArrayHelper::merge(isset(Yii::$app->params['imperaviSettings']) ? Yii::$app->params['imperaviSettings'] : [], [
                         'imageManagerJson' => '/admin/' . $this->moduleId . '/images-get',
                         'imageUpload' => '/admin/' . $this->moduleId . '/image-upload',
                         'fileUpload' => '/admin/' . $this->moduleId . '/file-upload',
                         'fileManagerJson' => '/admin/' . $this->moduleId . '/files-get',
-                        'plugins' => [
-                            'imagemanager',
-                            'filemanager',
-                            'clips',
-                            'fullscreen'
-                        ]
-                    ],
+                    ]),
                     'options' => [
                         'id' => 'content-text-' . Yii::$app->security->generateRandomString(6)
                     ]
