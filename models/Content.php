@@ -3,6 +3,7 @@
 namespace stepancher\content\models;
 
 use common\models\User;
+use mkv\metatag\behaviors\MetatagBehavior;
 use Yii;
 use vova07\fileapi\behaviors\UploadBehavior;
 use yii\caching\TagDependency;
@@ -67,6 +68,9 @@ class Content extends \yii\db\ActiveRecord
                         'url' => \Yii::$app->getModule($this->moduleId)->imageUrl.'/'
                     ]
                 ]
+            ],
+            'metatag' => [
+                'class' => MetatagBehavior::className(),
             ]
         ];
     }
