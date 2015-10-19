@@ -54,6 +54,10 @@ class Content extends \yii\base\Module
 
     public $controllerNamespace = 'stepancher\content\controllers';
 
+    public $useCache = false;
+
+    public $timeCache = 1;
+
     /**
      * @var array $roles - Роли модуля
      */

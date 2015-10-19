@@ -69,9 +69,6 @@ class Content extends \yii\db\ActiveRecord
                     ]
                 ]
             ],
-            'metatag' => [
-                'class' => MetatagBehavior::className(),
-            ]
         ];
     }
 
@@ -180,7 +177,9 @@ class Content extends \yii\db\ActiveRecord
         parent::beforeSave($insert);
 
         // Сбрасываем кэш
-        TagDependency::invalidate(Yii::$app->cache, $this->className());
+        if(Yii::$app->getModule($this->moduleId)->useCache) {
+            TagDependency::invalidate(Yii::$app->cache, $this->className());
+        }
 
         $time = new \DateTime();
         $time = $time->format('Y-m-d H:i:s');
@@ -223,7 +222,9 @@ class Content extends \yii\db\ActiveRecord
     public function beforeDelete()
     {
         // Сбрасываем кэш
-        TagDependency::invalidate(Yii::$app->cache, $this->className());
+        if(Yii::$app->getModule($this->moduleId)->useCache) {
+            TagDependency::invalidate(Yii::$app->cache, $this->className());
+        }
 
         return parent::beforeDelete();
     }
