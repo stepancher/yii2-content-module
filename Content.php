@@ -26,7 +26,7 @@ class Content extends \yii\base\Module
     /**
      * @var array List Chars for russian word
      */
-    private static $rustable =array(
+    private static $rustable = array(
         'а' => 'a',   'б' => 'b',   'в' => 'v',
         'г' => 'g',   'д' => 'd',   'е' => 'e',
         'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
