@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $url = substr(Url::current(), 0, strrpos(Url::current(), '/'));
+$model->setMetaTags();
 ?>
 
 <div class="article-single">
