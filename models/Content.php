@@ -347,7 +347,13 @@ class Content extends \yii\db\ActiveRecord
                 'items' => \Yii::$app->getModule($this->moduleId)->languages,
                 'visible' => false
             ],
-            'visible' => ['type' => \stepancher\content\Content::ATTR_TYPE_BOOLEAN],
+            'visible' => [
+                'type' => \stepancher\content\Content::ATTR_TYPE_BOOLEAN,
+                'config' => [
+                    'class' => 'visible_checkbox',
+                    'data-url' => '/admin/' . $this->moduleId . '/visible'
+                ]
+            ],
             'on_main' => [
                 'type' => \stepancher\content\Content::ATTR_TYPE_BOOLEAN,
                 'visible' => false

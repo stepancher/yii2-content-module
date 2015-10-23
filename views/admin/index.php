@@ -86,8 +86,8 @@ foreach($module->attributes as $attr => $i) {
                 $columns[] = [
                     'attribute' => $attr,
                     'format' => 'raw',
-                    'value' => function($data) use ($attr) {
-                        return Html::checkbox($attr, $data->$attr);
+                    'value' => function($data) use ($attr, $value) {
+                        return Html::checkbox($attr, $data->$attr, array_merge($value['config'], ['data-id' => $data->id]));
                     },
                     'filter' => false,
                     'visible' => isset($value['visible']) ? $value['visible'] : true

@@ -34,7 +34,7 @@ $(document).ready(function () {
         var $obj = $(this);
 
         $.ajax({
-            url: '/admin/content/visible',
+            url: $obj.data('url'),
             type: "POST",
             data: 'id=' + $obj.data('id') + '&visible=' + ($obj.prop('checked') ? 1 : 0),
             success: function($data) {
