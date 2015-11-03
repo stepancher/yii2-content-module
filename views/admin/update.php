@@ -42,7 +42,6 @@ if (!$this->title) {
 ); ?>
 <div class="box">
     <div class="box-body">
-
         <?php
         $titleAttribute = null;
         $urlAttribute = null;
@@ -55,6 +54,9 @@ if (!$this->title) {
                     break;
                 case Content::ATTR_TYPE_STRING:
                     echo $form->field($model, $attr)->textInput(isset($value['config']) ? $value['config'] : []);
+                    break;
+                case Content::ATTR_TYPE_INTEGER:
+                    echo $form->field($model, $attr)->input('number', isset($value['config']) ? $value['config'] : []);
                     break;
                 case Content::ATTR_TYPE_URL:
                     echo $form->field($model, $attr, [
