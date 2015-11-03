@@ -164,8 +164,9 @@ class Content extends \yii\db\ActiveRecord
     public function beforeValidate()
     {
         $module = Yii::$app->getModule($this->moduleId);
-        if (trim($this->short_text) === '')
+        if (isset($this->short_text) && ttrim($this->short_text) === '') {
             $this->short_text = $module->subString($this->text, $module->shortTextLength);
+        }
 
         return true;
     }
@@ -187,8 +188,9 @@ class Content extends \yii\db\ActiveRecord
         $time = new \DateTime();
         $time = $time->format('Y-m-d H:i:s');
 
-        $this->created_by = $this->created_by ? $this->created_by : Yii::$app->user->id;
-        $this->updated_by = Yii::$app->user->id;
+        if(isset($this->created_by)) $this->created_by = $this->created_by ? $this->created_by : Yii::$app->user->id;
+        if(isset($this->updated_by)) $this->updated_by = Yii::$app->user->id;
+
         if ($this->isNewRecord) {
             $this->create_time = $time;
             $this->update_time = $time;
