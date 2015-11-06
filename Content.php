@@ -69,6 +69,11 @@ class Content extends \yii\base\Module
     public $title = 'Статьи';
 
     /**
+     * @var string $titleEdit - Название в карточке создания/редактирования элемента
+     */
+    public $titleEdit = 'записи в статьях';
+
+    /**
      * @var array $languages - Доступные языки
      */
     public $languages = ['ru' => 'Русский'];

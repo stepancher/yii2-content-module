@@ -14,8 +14,8 @@ stepancher\content\assets\ContentAsset::register($this); //это ассет м�
 
 if (!$this->title) {
     $this->title = $model->isNewRecord ?
-        'Создание раздела "' . Yii::$app->getModule($moduleId)->title . '"'
-        : 'Редактирование раздела "' . Yii::$app->getModule($moduleId)->title . '"';
+        'Создание ' . Yii::$app->getModule($moduleId)->titleEdit
+        : 'Редактирование ' . Yii::$app->getModule($moduleId)->titleEdit;
 
     $this->params['breadcrumbs'][] =
         ['label' => Yii::$app->getModule($moduleId)->title, 'url' => \yii\helpers\Url::toRoute('/' . $moduleId . '/admin')];
