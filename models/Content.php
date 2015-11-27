@@ -303,7 +303,7 @@ class Content extends \yii\db\ActiveRecord
                 'type' => \stepancher\content\Content::ATTR_TYPE_IMAGE,
                 'config' => [
                     'settings' => [
-                        'url' => ['/' . $this->moduleId . '/fileapi-upload'],
+                        'url' => ['/' . $this->moduleId . '/imageapi-upload'],
                         'maxSize'=>'1048576',
                         'imageTransform'=> [
                             'maxWidth'=> '177',

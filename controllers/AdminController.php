@@ -37,7 +37,7 @@ class AdminController extends Controller
                         'allow' => true,
                         'roles' => [Yii::$app->getModule($this->module->id)->role('w_content')],
                         'actions' => ['create', 'update', 'delete', 'archive', 'unarchive', 'group-action', 'sort', 'visible',
-                        'fileapi-upload', 'image-upload', 'file-upload']
+                        'fileapi-upload', 'imageapi-upload', 'image-upload', 'file-upload']
                     ]
                 ],
             ],
@@ -77,8 +77,13 @@ class AdminController extends Controller
             ],
             'fileapi-upload' => [
                 'class' => FileAPIUpload::className(),
+                'path' => \Yii::$app->getModule($this->module->id)->imageDir.'/temp',
+                'uploadOnlyImage' => false
+            ],
+            'imageapi-upload' => [
+                'class' => FileAPIUpload::className(),
                 'path' => \Yii::$app->getModule($this->module->id)->imageDir.'/temp'
-            ]
+            ],
         ];
     }
 
