@@ -9,6 +9,7 @@ return [
     'Create content'=>'Создание статьи',
     'Update content'=>'Редактирование статьи',
     'Page not found'=>'Статья не найдена',
+    'Not found' => 'Ничего не найдено.',
     'Header' => 'Заголовок',
     'header'=>'заголовок',
     'Text'=>'Текст',
