@@ -304,11 +304,11 @@ class Content extends \yii\db\ActiveRecord
                 'config' => [
                     'settings' => [
                         'url' => ['/' . $this->moduleId . '/imageapi-upload'],
-                        'maxSize'=>'1048576',
-                        'imageTransform'=> [
-                            'maxWidth'=> '177',
-                            'maxHeight'=> '1000'
-                        ]
+//                        'maxSize'=>'1048576',
+//                        'imageTransform'=> [
+//                            'maxWidth'=> '177',
+//                            'maxHeight'=> '1000'
+//                        ]
                     ],
                 ]
             ],
