@@ -108,6 +108,12 @@ foreach($module->attributes as $attr => $i) {
                     'visible' => isset($value['visible']) ? $value['visible'] : true
                 ];
                 break;
+            case Content::ATTR_TYPE_HIDE:
+                $columns[] = [
+                    'attribute' => $attr,
+                    'visible' => false
+                ];
+                break;
             default:
                 $columns[] = [
                     'attribute' => $attr,
