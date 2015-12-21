@@ -102,7 +102,7 @@ class Content extends \yii\db\ActiveRecord
             [['url'], 'unique', 'message' => \Yii::t('content', 'Must be ubique')],
             [['short_text', 'keywords', 'text', 'url', 'description'], 'string'],
             [['visible', 'on_main'], 'boolean'],
-            [['sort'], 'integer', 'message' => \Yii::t('content', 'Must be an integer')],
+            [['sort'], 'integer', 'message' => \Yii::t('content', 'Must be an integer'), 'min' => -2147483648, 'max' => 2147483647],
             [['create_time', 'update_time','date_show', 'date_hide', 'created_by', 'updated_by'], 'safe'],
             [['header', 'title'], 'string', 'max' => 250, 'tooLong' => \Yii::t('content', 'maximum character', ['n' => 250])],
             ['image_file', 'safe'/*, 'skipOnEmpty' => true*/]
