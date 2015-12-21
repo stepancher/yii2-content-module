@@ -190,11 +190,11 @@ class Content extends \yii\db\ActiveRecord
 
         if(isset($this->created_by)) $this->created_by = $this->created_by ? $this->created_by : Yii::$app->user->id;
         if(isset($this->updated_by)) $this->updated_by = Yii::$app->user->id;
+        $this->date_show = $this->date_show ? $this->date_show : $time;
 
         if ($this->isNewRecord) {
             $this->create_time = $time;
             $this->update_time = $time;
-            $this->date_show = $this->date_show ? $this->date_show : $time;
             $this->sort = $this->sort ? $this->sort : 1000;
         } else {
             $this->update_time = $time;
