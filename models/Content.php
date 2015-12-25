@@ -185,7 +185,6 @@ class Content extends \yii\db\ActiveRecord
             TagDependency::invalidate(Yii::$app->cache, $this->className());
         }
 
-        date_default_timezone_set('Asia/Novosibirsk');
         $time = date('Y-m-d H:i:s');
 
         if(isset($this->created_by)) $this->created_by = $this->created_by ? $this->created_by : Yii::$app->user->id;
