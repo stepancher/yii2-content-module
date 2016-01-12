@@ -109,11 +109,8 @@ class AdminController extends Controller
     {
         /** @var Content $model */
         $model =  \Yii::$app->getModule($this->module->id)->model("Content", ['id' => $this->module->id]);
-        if(\Yii::$app->request->isPost) {
-            $model->attributes = \Yii::$app->request->post(preg_replace('/(.*)\\\/i', '', $model->className()));
-            if($model->save()){
-                $this->redirect(Url::to('index'));
-            }
+        if($model->load(\Yii::$app->request->post()) && $model->save()) {
+            $this->redirect(Url::to('index'));
         }
 
         return $this->render(\Yii::$app->getModule($this->module->id)->view('update'), ['model' => $model, 'moduleId' => $this->module->id]);
@@ -127,11 +124,8 @@ class AdminController extends Controller
     {
         /** @var Content $model */
         $model = \Yii::$app->getModule($this->module->id)->model("Content", ['id' => $this->module->id])->findOne($id);
-        if(\Yii::$app->request->isPost) {
-            $model->attributes = \Yii::$app->request->post(preg_replace('/(.*)\\\/i', '', $model->className()));
-            if($model->save()){
-                $this->redirect(Url::to('index'));
-            }
+        if($model->load(\Yii::$app->request->post()) && $model->save()) {
+            $this->redirect(Url::to('index'));
         }
 
         return $this->render(\Yii::$app->getModule($this->module->id)->view('update'), ['model' => $model, 'moduleId' => $this->module->id]);
