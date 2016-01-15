@@ -21,6 +21,7 @@ class Content extends \yii\base\Module
         ATTR_TYPE_INTEGER = 'integer',
         ATTR_TYPE_DROPDOWN = 'dropdown',
         ATTR_TYPE_HIDE = 'hide',
+        ATTR_TYPE_MULTIPLE_SELECT = 'multiple_select',
         ATTR_TYPE_IMAGE = 'image';
 
     /**
@@ -215,11 +216,11 @@ class Content extends \yii\base\Module
     protected function getDefaultModelViews()
     {
         return [
-            'archive' => 'archive',
-            'index' => 'index',
-            'update' => 'update',
-            'show' => 'show',
-            'list' => 'list',
+            'archive' => '@stepancher/content/views/admin/archive',
+            'index' => '@stepancher/content/views/admin/index',
+            'update' => '@stepancher/content/views/admin/update',
+            'show' => '@stepancher/content/views/default/show',
+            'list' => '@stepancher/content/views/default/list',
         ];
     }
 

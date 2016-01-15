@@ -5,6 +5,7 @@ use vova07\imperavi\Widget;
 use kartik\datetime\DateTimePicker;
 use vova07\fileapi\Widget as FileAPI;
 use stepancher\content\Content;
+use nex\chosen\Chosen;
 
 /**
  * @var yii\web\View $this
@@ -85,6 +86,9 @@ if (!$this->title) {
                     break;
                 case Content::ATTR_TYPE_DROPDOWN:
                     echo $form->field($model, $attr)->dropDownList(isset($value['items']) ? $value['items'] : [], isset($value['config']) ? $value['config'] : []);
+                    break;
+                case Content::ATTR_TYPE_MULTIPLE_SELECT:
+                    echo $form->field($model, $attr)->widget(Chosen::className(), isset($value['config']) ? $value['config'] : []);
                     break;
                 default:
                     break;
