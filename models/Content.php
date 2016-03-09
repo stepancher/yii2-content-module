@@ -98,6 +98,8 @@ class Content extends \yii\db\ActiveRecord
     public function rules()
     {
         $rules = [
+            [['header', 'title', 'keywords'], 'filter', 'filter' => 'trim'],
+            [['header', 'title', 'keywords'], 'filter', 'filter' => 'strip_tags'],
             [['header','url'], 'required', 'message' => \Yii::t('content', 'Cannot be blank')],
             [['url'], 'unique', 'message' => \Yii::t('content', 'Must be ubique')],
             [['short_text', 'keywords', 'text', 'url', 'description'], 'string'],
