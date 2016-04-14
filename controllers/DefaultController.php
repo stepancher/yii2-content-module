@@ -22,7 +22,7 @@ class DefaultController extends Controller
             $model = $contentModel->find()->where('url=:url', ['url' => $url])
                 ->andWhere('EXTRACT(epoch from date_hide) > :time or date_hide is null', ['time' => time()])
                 ->andWhere('EXTRACT(epoch from date_show) < :time or date_show is null', ['time' => time()])
-                ->andWhere('visible = true')
+                ->andWhere(['visible' => true, 'is_archive' => false])
                 ->one();
             if (!$model) {
                 throw new HttpException('404', Yii::t('content', 'Page not found'));

@@ -17,6 +17,7 @@ class ContentOutput extends Widget
 {
     public $onlyLinks = false;
     public $moduleId;
+    public $isArchive = false; //выводить архивные статьи
 
     public function init()
     {
@@ -30,7 +31,7 @@ class ContentOutput extends Widget
         $dataProvider = new ActiveDataProvider([
             'query' => $model::find()->where('EXTRACT(epoch from date_hide) > :time or date_hide is null', ['time' => time()])
                 ->andWhere('EXTRACT(epoch from date_show) < :time or date_show is null', ['time' => time()])
-                ->andWhere('visible = true')
+                ->andWhere(['visible' => true, 'is_archive' => $this->isArchive])
                 ->orderBy('sort'),
             'pagination' => [
                 'pageSize' => 20,
